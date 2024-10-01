@@ -1,46 +1,34 @@
-import { useAccount, useConnect, useDisconnect } from 'wagmi'
+// Import necessary modules
+import '@rainbow-me/rainbowkit/styles.css';
+import { getDefaultConfig, RainbowKitProvider } from '@rainbow-me/rainbowkit';
+import { WagmiProvider } from 'wagmi';
+import { mainnet, polygon, optimism, arbitrum, base } from 'wagmi/chains';
+import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
+import { ConnectButton } from '@rainbow-me/rainbowkit';
 
-function App() {
-  const account = useAccount()
-  const { connectors, connect, status, error } = useConnect()
-  const { disconnect } = useDisconnect()
+// Set Config
+const config = getDefaultConfig({
+   appName: 'My RainbowKit App',
+   projectId: 'YOUR_PROJECT_ID', // replace with your project ID
+   chains: [mainnet, polygon, optimism, arbitrum, base],
+   ssr: false,
+});
 
-  return (
-    <>
-      <div>
-        <h2>Account</h2>
+const queryClient = new QueryClient();
 
-        <div>
-          status: {account.status}
-          <br />
-          addresses: {JSON.stringify(account.addresses)}
-          <br />
-          chainId: {account.chainId}
-        </div>
+// Wrap your app with providers
+const App = () => {
+   return (
+      <WagmiProvider config={config}>
+         <QueryClientProvider client={queryClient}>
+            <RainbowKitProvider>
+               {/* Your actual application components */}
+               <ConnectButton />
+            </RainbowKitProvider>
+         </QueryClientProvider>
+      </WagmiProvider>
+   );
+};
 
-        {account.status === 'connected' && (
-          <button type="button" onClick={() => disconnect()}>
-            Disconnect
-          </button>
-        )}
-      </div>
-
-      <div>
-        <h2>Connect</h2>
-        {connectors.map((connector) => (
-          <button
-            key={connector.uid}
-            onClick={() => connect({ connector })}
-            type="button"
-          >
-            {connector.name}
-          </button>
-        ))}
-        <div>{status}</div>
-        <div>{error?.message}</div>
-      </div>
-    </>
-  )
-}
-
-export default App
+// Export your App
+export default App;
