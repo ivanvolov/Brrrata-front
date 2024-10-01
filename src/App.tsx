@@ -8,8 +8,8 @@ import { ConnectButton } from '@rainbow-me/rainbowkit';
 
 // Set Config
 const config = getDefaultConfig({
-   appName: 'My RainbowKit App',
-   projectId: 'YOUR_PROJECT_ID', // replace with your project ID
+   appName: 'Brrrata Web App',
+   projectId: '1590ddedb144ba56c0842d3b13c4297b',
    chains: [mainnet, polygon, optimism, arbitrum, base],
    ssr: false,
 });
@@ -19,7 +19,7 @@ const queryClient = new QueryClient();
 // Wrap your app with providers
 const App = () => {
    return (
-      <WagmiProvider config={config}>
+      <WagmiProvider config={config as any}>
          <QueryClientProvider client={queryClient}>
             <RainbowKitProvider>
                {/* Your actual application components */}
