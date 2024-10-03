@@ -1,11 +1,26 @@
 import React, { useEffect, useState } from 'react';
-import { useReadContract, useAccount, useBlockNumber, useBalance } from 'wagmi';
+import {
+  useReadContract,
+  useAccount,
+  useBlockNumber,
+  useBalance,
+  useWriteContract,
+} from 'wagmi';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 
 import { useQueryClient } from '@tanstack/react-query';
 import fonduePitABI from '../web3/abi/FonduePit.json';
 import brrrataABI from '../web3/abi/Brrrata.json';
-import { BRRRATA_ADDRESS, FONDUEPIT_ADDRESS, WCHEESE_ADDRESS } from '../web3';
+import wcheeseABI from '../web3/abi/WCHEESE.json';
+import {
+  BRRRATA_ADDRESS,
+  FONDUEPIT_ADDRESS,
+  WCHEESE_ADDRESS,
+  toUnit,
+  UINT_256_MAX,
+  fromUnit,
+  toNumber,
+} from '../web3';
 
 export default function Page() {
   const queryClient = useQueryClient();
@@ -34,22 +49,54 @@ export default function Page() {
     args: [walletAddress],
   });
 
-  const {
-    data: totalSupply,
-    queryKey: queryKeyTotalSupply,
-    isLoading,
-  } = useReadContract({
-    abi: brrrataABI,
-    address: '0xceB0EFa4eF35e3De939A27397F378F8A6667f33f',
-    functionName: 'totalSupply',
-    args: [],
+  const { data: allowance, queryKey: queryKeyAllowance } = useReadContract({
+    abi: wcheeseABI,
+    address: WCHEESE_ADDRESS,
+    functionName: 'allowance',
+    args: [walletAddress, BRRRATA_ADDRESS],
   });
-  if (totalSupply) {
-    console.log('>>', Object.keys(totalSupply as any));
-  } else {
-    console.log('>>', isLoading);
-    console.log('>> :(');
-  }
+
+  const { data: spin, queryKey: queryKeySpin } = useReadContract({
+    abi: brrrataABI,
+    address: BRRRATA_ADDRESS,
+    functionName: 'spins',
+    args: [walletAddress],
+  });
+
+  const { writeContract } = useWriteContract();
+
+  const allowToBrrrata = (value: any) => {
+    writeContract({
+      abi: wcheeseABI,
+      address: WCHEESE_ADDRESS,
+      functionName: 'approve',
+      args: [BRRRATA_ADDRESS, value],
+    });
+  };
+
+  const mintBrrrata = (value: any) => {
+    // TODO: Don't forget about spin!
+    console.log('>> mintBrrrata', value);
+    writeContract({
+      abi: brrrataABI,
+      address: BRRRATA_ADDRESS,
+      functionName: 'giveMeBrrrata',
+      args: [value, walletAddress],
+    });
+  };
+
+  // const { data: totalSupply, queryKey: queryKeyTotalSupply } = useReadContract({
+  //   abi: brrrataABI,
+  //   address: WCHEESE_ADDRESS,
+  //   functionName: 'totalSupply',
+  //   args: [],
+  // });
+  // if (totalSupply) {
+  //   console.log('>>', toUnit(totalSupply as any));
+  //   console.log('>>', typeof totalSupply);
+  // } else {
+  //   console.log('>> :(');
+  // }
 
   useEffect(() => {
     if (blockNumber === undefined) return;
@@ -58,7 +105,7 @@ export default function Page() {
     queryClient.invalidateQueries({ queryKey: queryKeyWB });
     queryClient.invalidateQueries({ queryKey: queryKeyWBrrr });
     queryClient.invalidateQueries({ queryKey: queryKeyLF });
-    queryClient.invalidateQueries({ queryKey: queryKeyTotalSupply });
+    queryClient.invalidateQueries({ queryKey: queryKeyAllowance });
   }, [blockNumber, queryClient, walletAddress]);
 
   return (
@@ -72,13 +119,28 @@ export default function Page() {
         {wBalance ? (wBalance as any)?.formatted : 'Loading...'}
       </div>
       <div>
-        Balance BRRRATA:{' '}
+        Allowance WCHEESE: {allowance ? toUnit(allowance as any) : 'Loading...'}
+      </div>
+      <div>
+        Balance BRRRATA:
         {brrrBalance ? (brrrBalance as any)?.formatted : 'Loading...'}
       </div>
       <div>
-        Last Form Id: {totalSupply}
-        {totalSupply ? (totalSupply as any)?.formatted : 'Loading...'}
+        Spin:
+        {spin ? toNumber(spin as any) : 'Not found'}
       </div>
+
+      <div>
+        {!lastFormId || lastFormId === 0 ? (
+          <div>You don't have any brrrata staked</div>
+        ) : (
+          <div>Here is the list of your staking forms:</div>
+        )}
+      </div>
+      <button onClick={() => allowToBrrrata(UINT_256_MAX)}>Allow Unlim</button>
+      <button onClick={() => mintBrrrata(fromUnit('0.0001'))}>
+        Mint Brrrata
+      </button>
     </div>
   );
 }
