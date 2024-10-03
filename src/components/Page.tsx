@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import {
   useReadContract,
   useAccount,
@@ -21,6 +21,9 @@ import {
   fromUnit,
   toNumber,
 } from '../web3';
+
+import MoldForm from './MoldForm';
+import { foundry } from 'viem/chains';
 
 export default function Page() {
   const queryClient = useQueryClient();
@@ -49,11 +52,18 @@ export default function Page() {
     args: [walletAddress],
   });
 
-  const { data: allowance, queryKey: queryKeyAllowance } = useReadContract({
+  const { data: allowanceWC, queryKey: queryKeyAllowanceWC } = useReadContract({
     abi: wcheeseABI,
     address: WCHEESE_ADDRESS,
     functionName: 'allowance',
     args: [walletAddress, BRRRATA_ADDRESS],
+  });
+
+  const { data: allowanceBR, queryKey: queryKeyAllowanceBR } = useReadContract({
+    abi: brrrataABI,
+    address: BRRRATA_ADDRESS,
+    functionName: 'allowance',
+    args: [walletAddress, FONDUEPIT_ADDRESS],
   });
 
   const { data: spin, queryKey: queryKeySpin } = useReadContract({
@@ -74,6 +84,15 @@ export default function Page() {
     });
   };
 
+  const allowToPit = (value: any) => {
+    writeContract({
+      abi: brrrataABI,
+      address: BRRRATA_ADDRESS,
+      functionName: 'approve',
+      args: [FONDUEPIT_ADDRESS, value],
+    });
+  };
+
   const mintBrrrata = (value: any) => {
     // TODO: Don't forget about spin!
     console.log('>> mintBrrrata', value);
@@ -85,18 +104,15 @@ export default function Page() {
     });
   };
 
-  // const { data: totalSupply, queryKey: queryKeyTotalSupply } = useReadContract({
-  //   abi: brrrataABI,
-  //   address: WCHEESE_ADDRESS,
-  //   functionName: 'totalSupply',
-  //   args: [],
-  // });
-  // if (totalSupply) {
-  //   console.log('>>', toUnit(totalSupply as any));
-  //   console.log('>>', typeof totalSupply);
-  // } else {
-  //   console.log('>> :(');
-  // }
+  const lockBrrrata = (value: any, periodId: number) => {
+    console.log('>> lockBrrrata', value, periodId);
+    writeContract({
+      abi: fonduePitABI,
+      address: FONDUEPIT_ADDRESS,
+      functionName: 'stake',
+      args: [value, walletAddress, periodId],
+    });
+  };
 
   useEffect(() => {
     if (blockNumber === undefined) return;
@@ -105,7 +121,9 @@ export default function Page() {
     queryClient.invalidateQueries({ queryKey: queryKeyWB });
     queryClient.invalidateQueries({ queryKey: queryKeyWBrrr });
     queryClient.invalidateQueries({ queryKey: queryKeyLF });
-    queryClient.invalidateQueries({ queryKey: queryKeyAllowance });
+    queryClient.invalidateQueries({ queryKey: queryKeyAllowanceWC });
+    queryClient.invalidateQueries({ queryKey: queryKeyAllowanceBR });
+    queryClient.invalidateQueries({ queryKey: queryKeySpin });
   }, [blockNumber, queryClient, walletAddress]);
 
   return (
@@ -119,7 +137,12 @@ export default function Page() {
         {wBalance ? (wBalance as any)?.formatted : 'Loading...'}
       </div>
       <div>
-        Allowance WCHEESE: {allowance ? toUnit(allowance as any) : 'Loading...'}
+        Allowance WCHEESE:
+        {allowanceWC ? toUnit(allowanceWC as any) : 'No;('}
+      </div>
+      <div>
+        Allowance BRRRATA:
+        {allowanceBR ? toUnit(allowanceBR as any) : 'No;('}
       </div>
       <div>
         Balance BRRRATA:
@@ -134,12 +157,28 @@ export default function Page() {
         {!lastFormId || lastFormId === 0 ? (
           <div>You don't have any brrrata staked</div>
         ) : (
-          <div>Here is the list of your staking forms:</div>
+          <div>
+            <div>Here is the list of your staking forms:</div>
+            {Array.from(
+              { length: toNumber(lastFormId as any) },
+              (_, i) => i,
+            ).map((id) => (
+              <MoldForm key={id} id={id} />
+            ))}
+          </div>
         )}
       </div>
-      <button onClick={() => allowToBrrrata(UINT_256_MAX)}>Allow Unlim</button>
+      <button onClick={() => allowToBrrrata(UINT_256_MAX)}>
+        Allow WCHEESE Unlim
+      </button>
+      <button onClick={() => allowToPit(UINT_256_MAX)}>
+        Allow BRRRATA Unlim
+      </button>
       <button onClick={() => mintBrrrata(fromUnit('0.0001'))}>
         Mint Brrrata
+      </button>
+      <button onClick={() => lockBrrrata(fromUnit('0.0001'), 0)}>
+        Lock Brrrata
       </button>
     </div>
   );

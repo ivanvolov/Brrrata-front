@@ -22,8 +22,8 @@ export function fromUnit(value: string): BigNumberish {
   return parseUnits(value, 18);
 }
 
-export const periodMapping = {
-  0: 5040,
-  1: 5040 * 7 * 2,
-  2: 5040 * 7 * 4,
+export const periodMapping: { [key: string]: number } = {
+  '0': 5040,
+  '1': 5040 * 7 * 2,
+  '2': 5040 * 7 * 4,
 };
