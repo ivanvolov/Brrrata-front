@@ -2,6 +2,13 @@
 import '@rainbow-me/rainbowkit/styles.css';
 import { getDefaultConfig, Chain } from '@rainbow-me/rainbowkit';
 import { mainnet } from 'wagmi/chains';
+import {
+  createConfig,
+  http,
+  createStorage,
+  cookieStorage,
+  deserialize,
+} from 'wagmi';
 
 const cheeseChainTestnet = {
   id: 9209108,
@@ -14,11 +21,17 @@ const cheeseChainTestnet = {
   },
 } as const satisfies Chain;
 
+export const storage = createStorage({
+  deserialize,
+  storage: localStorage,
+});
+
 export const config = getDefaultConfig({
   appName: 'Brrrata Web App',
   projectId: '1590ddedb144ba56c0842d3b13c4297b', //TODO: fix for wallet connect
   chains: [mainnet, cheeseChainTestnet],
   ssr: false,
+  storage: storage,
 });
 
 console.log(config);

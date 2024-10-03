@@ -1,11 +1,22 @@
-import { createConfig, http } from 'wagmi';
+import {
+  createConfig,
+  http,
+  createStorage,
+  cookieStorage,
+  deserialize,
+} from 'wagmi';
 import { mainnet, sepolia } from 'wagmi/chains';
 import '@rainbow-me/rainbowkit/styles.css';
 import { Chain } from '@rainbow-me/rainbowkit';
 import { connectorsForWallets } from '@rainbow-me/rainbowkit';
-import { rainbowWallet } from '@rainbow-me/rainbowkit/wallets';
-import { injectedWallet } from '@rainbow-me/rainbowkit/wallets';
-import { metaMaskWallet } from '@rainbow-me/rainbowkit/wallets';
+import {
+  rainbowWallet,
+  injectedWallet,
+  metaMaskWallet,
+  coinbaseWallet,
+} from '@rainbow-me/rainbowkit/wallets';
+
+import { injected, metaMask } from 'wagmi/connectors';
 
 const cheeseChainTestnet = {
   id: 9209108,
@@ -22,7 +33,7 @@ const connectors = connectorsForWallets(
   [
     {
       groupName: 'Recommended',
-      wallets: [rainbowWallet, metaMaskWallet, injectedWallet],
+      wallets: [metaMaskWallet, injectedWallet, rainbowWallet, coinbaseWallet],
     },
   ],
   {
@@ -31,12 +42,18 @@ const connectors = connectorsForWallets(
   },
 );
 
+export const storage = createStorage({
+  deserialize,
+  storage: localStorage,
+});
+
 export const config = createConfig({
   chains: [mainnet, sepolia, cheeseChainTestnet],
-  connectors: connectors,
+  connectors: [injected(), metaMask()],
   transports: {
     [mainnet.id]: http(),
     [sepolia.id]: http(),
     [cheeseChainTestnet.id]: http(),
   },
+  storage: storage,
 });

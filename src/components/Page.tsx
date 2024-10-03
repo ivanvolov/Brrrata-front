@@ -7,35 +7,33 @@ import { useQueryClient } from '@tanstack/react-query';
 // import tokenAbi from '../abis/WCHEESE.json';
 // import { WCHEESE_ADDRESS } from '../web3';
 
-import { reconnect } from '@wagmi/core';
-import { injected } from '@wagmi/connectors';
-import { config } from '../web3/wagmiConfig';
+import { storage } from '../web3/wagmiConfig2';
 
 export default function Page() {
-  // useEffect(() => {
-  //   console.log('> reconnect try');
-  //   const reconnectFunction = async () => {
-  //     const result = await reconnect(config, { connectors: [injected()] });
-  //     console.log(result);
-  //   };
-  //   reconnectFunction();
-  // }, []); // The empty array means that it will only get called on initial component mount
-
   // const [supplyData, setSupplyData] = useState(0);
 
-  // const queryClient = useQueryClient();
-  // const { data: blockNumber } = useBlockNumber({ watch: true });
-  // const { data: balance, queryKey } = useBalance({
-  //   address: '0x4557B18E779944BFE9d78A672452331C186a9f48',
-  // });
+  const queryClient = useQueryClient();
+  const { data: blockNumber } = useBlockNumber({ watch: true });
+  const { address: walletAddress } = useAccount();
 
+  const { data: balance, queryKey: queryKeyB } = useBalance({
+    address: walletAddress,
+  });
+
+  const recentConnectorId = storage.getItem('recentConnectorId');
+  console.log('recentConnectorId:', recentConnectorId);
   // useEffect(() => {
-  //   queryClient.invalidateQueries({ queryKey });
+  //   if (blockNumber === undefined) return;
+  //   console.log('Update at BlockNumber:', blockNumber);
+  //   console.log('QueryKey:', queryKeyB);
+  //   queryClient.invalidateQueries({ queryKey: queryKeyB });
   // }, [blockNumber, queryClient]);
 
-  // const { address: walletAddress } = useAccount();
-
   // // console.log("address:", address);
+
+  // const { data: balance, queryKey } = useBalance({
+  //   address: walletAddress,
+  // });
 
   // // const { data: wCheeseBalance, isLoading: wCheeseBalanceIsLoading } = useReadContract({
   // //   abi: tokenAbi,
@@ -50,7 +48,7 @@ export default function Page() {
   return (
     <div>
       <ConnectButton showBalance={false} />
-      {/* <div>{(balance as any).formatted}</div> */}
+      <div>{balance ? (balance as any)?.formatted : 'Loading...'}</div>
       {/* <div>{walletAddress as any}</div> */}
       {/* <div>Your WCheese Balance: {wCheeseBalance}</div> */}
     </div>
