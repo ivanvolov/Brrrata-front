@@ -13,14 +13,12 @@ import wcheeseABI from '../../web3/abi/WCHEESE.json';
 import {
   BRRRATA_ADDRESS,
   WCHEESE_ADDRESS,
-  toUnit,
   UINT_256_MAX,
-  removeZerosFromBehind,
   fromUnit,
-  toNumber,
 } from '../../web3';
 
-import { Token } from '../../web3/token';
+import { toBN, format, parse } from '../../shared/token';
+import { tokenAmountInputRestriction } from '../../shared/inputRestrictions';
 
 import { BigNumber } from '@ethersproject/bignumber';
 
@@ -33,7 +31,7 @@ export default function Mint() {
   const { data: wBalance, queryKey: queryKeyWB } = useBalance({
     address: walletAddress,
     token: WCHEESE_ADDRESS,
-  }) as any;
+  });
 
   const { data: allowanceWC, queryKey: queryKeyAllowanceWC } = useReadContract({
     abi: wcheeseABI,
@@ -82,15 +80,38 @@ export default function Mint() {
 
   // ---- Just react stuff
 
-  const [valuePercent, setValuePercent] = useState(0);
-  const [amount, setAmount] = useState(0);
+  const [amountPercent, setAmountPercent] = useState(0);
+  const [amount, setAmount] = useState(BigNumber.from(0));
 
-  const updateAmount = (event: any) => {
-    let _valuePercent = event.target.value;
-    console.log('>> updateAmount', _valuePercent);
-    setValuePercent(_valuePercent);
-    let _amount = (Number(toUnit(wBalance?.value)) * _valuePercent) / 100;
+  const updateAmountPercent = (event: any) => {
+    let _amountPercent = event.target.value;
+    // console.log('>> updateAmountPercent', _amountPercent);
+    setAmountPercent(_amountPercent);
+    const _amount = toBN(wBalance?.value)
+      .mul(toBN(_amountPercent, 18))
+      .div(toBN(100, 18));
+
+    // console.log('>> updateAmount', format(_amount));
     setAmount(_amount);
+  };
+
+  const updateAmountInput = (event: any) => {
+    let _amountString = event.target.value;
+    _amountString = tokenAmountInputRestriction(_amountString);
+    let _amount = parse(_amountString);
+    setAmount(_amount);
+    // console.log('>> updateAmount', format(_amount));
+
+    const _amountPercent = _amount
+      .mul(toBN(100, 18))
+      .div(toBN(wBalance?.value));
+    setAmountPercent(Number(format(_amountPercent)));
+    // console.log('>> updateAmountPercent', _amountPercent);
+  };
+
+  const setAmountMax = () => {
+    setAmountPercent(100);
+    setAmount(toBN(wBalance?.value));
   };
   return (
     <div>
@@ -101,25 +122,29 @@ export default function Mint() {
           type="string"
           placeholder="0.0"
           autoComplete="off"
-          value={removeZerosFromBehind(amount)}
+          onChange={(e) => updateAmountInput(e)}
+          value={format(amount)}
         />
-        <button className="absolute right-2 top-1/2 -translate-y-1/2 rounded bg-gray-200 px-2 py-1 text-sm text-gray-700">
+        <button
+          className="absolute right-2 top-1/2 -translate-y-1/2 rounded bg-gray-200 px-2 py-1 text-sm text-gray-700"
+          onClick={() => setAmountMax()}
+        >
           Max
         </button>
       </div>
       <div className="flex flex-col space-y-2">
         <div className="flex items-center justify-between">
-          <label className="text-gray-700">Amount</label>
+          <label className="text-gray-700">0</label>
           <span className="text-gray-700" id="rangeValue">
-            Balance: {toUnit(wBalance?.value)}
+            Balance: {format(toBN(wBalance?.value))}
           </span>
         </div>
         <input
           type="range"
           min="0"
           max="100"
-          value={valuePercent}
-          onChange={(e) => updateAmount(e)}
+          value={amountPercent}
+          onChange={(e) => updateAmountPercent(e)}
           className="h-2 w-full cursor-pointer appearance-none rounded-lg bg-gray-200"
         />
       </div>
