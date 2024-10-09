@@ -6,12 +6,11 @@ import {
   useBalance,
   useWriteContract,
 } from 'wagmi';
-import { ConnectButton } from '@rainbow-me/rainbowkit';
 
 import { useQueryClient } from '@tanstack/react-query';
-import fonduePitABI from '../web3/abi/FonduePit.json';
-import brrrataABI from '../web3/abi/Brrrata.json';
-import wcheeseABI from '../web3/abi/WCHEESE.json';
+import fonduePitABI from '../../web3/abi/FonduePit.json';
+import brrrataABI from '../../web3/abi/Brrrata.json';
+import wcheeseABI from '../../web3/abi/WCHEESE.json';
 import {
   BRRRATA_ADDRESS,
   FONDUEPIT_ADDRESS,
@@ -20,11 +19,9 @@ import {
   UINT_256_MAX,
   fromUnit,
   toNumber,
-} from '../web3';
+} from '../../web3';
 
-import MoldForm from './interfaces/MoldForm';
-
-export default function Page() {
+export default function Stake() {
   const queryClient = useQueryClient();
 
   const { data: blockNumber } = useBlockNumber({ watch: true });
@@ -124,60 +121,44 @@ export default function Page() {
     queryClient.invalidateQueries({ queryKey: queryKeyAllowanceBR });
     queryClient.invalidateQueries({ queryKey: queryKeySpin });
   }, [blockNumber, queryClient, walletAddress]);
-
   return (
     <div>
-      <ConnectButton showBalance={false} />
-      <div>
-        Balance CHEESE: {balance ? (balance as any)?.formatted : 'Loading...'}
+      <h2 className="mb-4 text-xl font-bold">Stake</h2>
+      <div className="relative mb-4">
+        <input
+          type="number"
+          className="w-full rounded border p-2 pr-16 text-right [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+          placeholder="Amount to Stake"
+        />
+        <button className="absolute right-2 top-1/2 -translate-y-1/2 rounded bg-gray-200 px-2 py-1 text-sm text-gray-700">
+          Max
+        </button>
       </div>
-      <div>
-        Balance WCHEESE:{' '}
-        {wBalance ? (wBalance as any)?.formatted : 'Loading...'}
+      <div className="flex flex-col space-y-2">
+        <div className="flex items-center justify-between">
+          <label className="text-gray-700">Amount</label>
+          <span className="text-gray-700" id="rangeValue3">
+            0
+          </span>
+        </div>
+        <input
+          type="range"
+          min="0"
+          max="100"
+          value="0"
+          className="h-2 w-full cursor-pointer appearance-none rounded-lg bg-gray-200"
+        />
       </div>
-      <div>
-        Allowance WCHEESE:
-        {allowanceWC ? toUnit(allowanceWC as any) : 'No;('}
+      <div className="mb-4 mt-4">
+        <label className="mb-2 block text-gray-700">Staking Duration</label>
+        <select className="w-full cursor-pointer rounded border bg-white p-2">
+          <option>1 week</option>
+          <option>2 weeks</option>
+          <option>3 weeks</option>
+        </select>
       </div>
-      <div>
-        Allowance BRRRATA:
-        {allowanceBR ? toUnit(allowanceBR as any) : 'No;('}
-      </div>
-      <div>
-        Balance BRRRATA:
-        {brrrBalance ? (brrrBalance as any)?.formatted : 'Loading...'}
-      </div>
-      <div>
-        Spin:
-        {spin ? toNumber(spin as any) : 'Not found'}
-      </div>
-
-      <div>
-        {!lastFormId || lastFormId === 0 ? (
-          <div>You don't have any brrrata staked</div>
-        ) : (
-          <div>
-            <div>Here is the list of your staking forms:</div>
-            {Array.from(
-              { length: toNumber(lastFormId as any) },
-              (_, i) => i,
-            ).map((id) => (
-              <MoldForm key={id} id={id} />
-            ))}
-          </div>
-        )}
-      </div>
-      <button onClick={() => allowToBrrrata(UINT_256_MAX)}>
-        Allow WCHEESE Unlim
-      </button>
-      <button onClick={() => allowToPit(UINT_256_MAX)}>
-        Allow BRRRATA Unlim
-      </button>
-      <button onClick={() => mintBrrrata(fromUnit('0.0001'))}>
-        Mint Brrrata
-      </button>
-      <button onClick={() => lockBrrrata(fromUnit('0.0001'), 0)}>
-        Lock Brrrata
+      <button className="mt-4 w-full rounded-lg bg-green-500 py-3 font-medium text-white transition-colors hover:bg-green-600">
+        Stake Brrata
       </button>
     </div>
   );
