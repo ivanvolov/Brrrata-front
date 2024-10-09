@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import {
   useReadContract,
   useAccount,
@@ -23,7 +23,6 @@ import {
 } from '../web3';
 
 import MoldForm from './MoldForm';
-import { foundry } from 'viem/chains';
 
 export default function Page() {
   const queryClient = useQueryClient();

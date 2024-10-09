@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "lint": "biome check .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "predeploy": "sudo netlify deploy --dir=dist",
+    "deploy": "sudo netlify deploy --prod --dir=dist"
   },
   "dependencies": {
     "@rainbow-me/rainbow-button": "^0.2.16",
