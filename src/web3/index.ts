@@ -11,6 +11,7 @@ export const UINT_256_MAX =
   '115792089237316195423570985008687907853269984665640564039457584007913129639935';
 
 export function toUnit(value: BigNumberish): string {
+  if (value == null || value == undefined) return '0';
   return formatUnits(value, 18);
 }
 
@@ -21,6 +22,13 @@ export function toNumber(value: BigNumberish): number {
 export function fromUnit(value: string): BigNumberish {
   return parseUnits(value, 18);
 }
+
+export const removeZerosFromBehind = (value: any): string => {
+  value = value.toString();
+  while (value[value.length - 1] === '0') value = value.slice(0, -1);
+  if (value == 0) return '0';
+  return value;
+};
 
 export const periodMapping: { [key: string]: number } = {
   '0': 5040,
