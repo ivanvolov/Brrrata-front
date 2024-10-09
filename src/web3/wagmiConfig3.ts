@@ -1,21 +1,22 @@
-import { getDefaultWallets } from '@rainbow-me/rainbowkit';
-import '@rainbow-me/rainbowkit/styles.css';
-import { allChains, configureChains, createClient } from 'wagmi';
-import { alchemyProvider } from 'wagmi/providers/alchemy';
+import { createConfig, configureChains } from 'wagmi';
+import { mainnet } from 'wagmi/chains';
 import { publicProvider } from 'wagmi/providers/public';
+import { getDefaultWallets } from '@rainbow-me/rainbowkit';
 
-export const { chains, provider } = configureChains(allChains, [
-  alchemyProvider({ alchemyId: 'TXsw-vslXP7HD5w_QyDkwuR1XyKoE8zX' }),
-  publicProvider(),
-]);
+// Configure chains and providers
+const { chains, publicClient } = configureChains([mainnet], [publicProvider()]);
 
+// Get default wallets for RainbowKit (you can skip if not using RainbowKit)
 const { connectors } = getDefaultWallets({
-  appName: 'Brrrata Web App',
+  appName: 'YourAppName',
   chains,
 });
 
-export const wagmiClient = createClient({
-  autoConnect: true,
+// Create Wagmi client
+const config = createConfig({
+  autoConnect: true, // This is still available
   connectors,
-  provider,
+  publicClient,
 });
+
+export default config;
