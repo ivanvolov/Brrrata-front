@@ -3,14 +3,9 @@ import {
   useReadContract,
   useAccount,
   useBlockNumber,
-  useBalance,
   useWriteContract,
 } from 'wagmi';
-import {
-  useConnectModal,
-  useAccountModal,
-  useChainModal,
-} from '@rainbow-me/rainbowkit';
+import { useConnectModal, useChainModal } from '@rainbow-me/rainbowkit';
 
 import { useQueryClient } from '@tanstack/react-query';
 import brrrataABI from '../../web3/abi/Brrrata.json';
@@ -36,9 +31,11 @@ export default function Mint() {
   const { openConnectModal } = useConnectModal();
   const { openChainModal } = useChainModal();
 
-  const { data: wBalance, queryKey: queryKeyWB } = useBalance({
-    address: walletAddress,
-    token: WCHEESE_ADDRESS,
+  const { data: wBalance, queryKey: queryKeyWB } = useReadContract({
+    abi: wcheeseABI,
+    address: WCHEESE_ADDRESS,
+    functionName: 'balanceOf',
+    args: [walletAddress],
   });
 
   const { data: wAllowance, queryKey: queryKeyAllowanceWC } = useReadContract({
@@ -57,12 +54,12 @@ export default function Mint() {
 
   const { writeContract } = useWriteContract();
 
-  const handleTransactionApprove = (value: any) => {
+  const handleTransactionApprove = () => {
     writeContract({
       abi: wcheeseABI,
       address: WCHEESE_ADDRESS,
       functionName: 'approve',
-      args: [BRRRATA_ADDRESS, value],
+      args: [BRRRATA_ADDRESS, UINT_256_MAX],
     });
   };
 
@@ -95,7 +92,7 @@ export default function Mint() {
     let _amountPercent = event.target.value;
     // console.log('>> updateAmountPercent', _amountPercent);
     setAmountPercent(_amountPercent);
-    const _amount = toBN(wBalance?.value)
+    const _amount = toBN(wBalance)
       .mul(toBN(_amountPercent, 18))
       .div(toBN(100, 18));
 
@@ -110,23 +107,22 @@ export default function Mint() {
     setAmount(_amount);
     // console.log('>> updateAmount', format(_amount));
 
-    const _amountPercent = _amount
-      .mul(toBN(100, 18))
-      .div(toBN(wBalance?.value));
+    const _amountPercent = _amount.mul(toBN(100, 18)).div(toBN(wBalance));
     setAmountPercent(Number(format(_amountPercent)));
     // console.log('>> updateAmountPercent', _amountPercent);
   };
 
   const setAmountMax = () => {
     setAmountPercent(100);
-    setAmount(toBN(wBalance?.value));
+    setAmount(toBN(wBalance));
   };
 
   const [buttonText, handleClick, disabled]: any = getMintButtonLogic({
     walletAddress: walletAddress,
     chainId: chainId,
-    balance: toBN(wBalance?.value),
+    balance: wBalance,
     allowance: wAllowance,
+    amount: amount,
     handleTransactionApprove: handleTransactionApprove,
     handleTransactionMint: handleTransactionMint,
     openConnectModal: openConnectModal,
@@ -157,7 +153,7 @@ export default function Mint() {
         <div className="flex items-center justify-between">
           <label className="text-gray-700">0</label>
           <span className="text-gray-700" id="rangeValue">
-            Balance: {!wBalance ? '...' : format(toBN(wBalance?.value))}
+            Balance: {!wBalance ? '...' : format(toBN(wBalance))}
           </span>
         </div>
         <input
