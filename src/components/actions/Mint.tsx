@@ -6,6 +6,11 @@ import {
   useBalance,
   useWriteContract,
 } from 'wagmi';
+import {
+  useConnectModal,
+  useAccountModal,
+  useChainModal,
+} from '@rainbow-me/rainbowkit';
 
 import { useQueryClient } from '@tanstack/react-query';
 import brrrataABI from '../../web3/abi/Brrrata.json';
@@ -19,6 +24,7 @@ import {
 
 import { toBN, format, parse } from '../../shared/token';
 import { tokenAmountInputRestriction } from '../../shared/inputRestrictions';
+import { getMintButtonLogic } from '../actions/mintButtonLogic';
 
 import { BigNumber } from '@ethersproject/bignumber';
 
@@ -26,14 +32,16 @@ export default function Mint() {
   const queryClient = useQueryClient();
 
   const { data: blockNumber } = useBlockNumber({ watch: true });
-  const { address: walletAddress } = useAccount();
+  const { address: walletAddress, chainId: chainId } = useAccount();
+  const { openConnectModal } = useConnectModal();
+  const { openChainModal } = useChainModal();
 
   const { data: wBalance, queryKey: queryKeyWB } = useBalance({
     address: walletAddress,
     token: WCHEESE_ADDRESS,
   });
 
-  const { data: allowanceWC, queryKey: queryKeyAllowanceWC } = useReadContract({
+  const { data: wAllowance, queryKey: queryKeyAllowanceWC } = useReadContract({
     abi: wcheeseABI,
     address: WCHEESE_ADDRESS,
     functionName: 'allowance',
@@ -49,7 +57,7 @@ export default function Mint() {
 
   const { writeContract } = useWriteContract();
 
-  const allowToBrrrata = (value: any) => {
+  const handleTransactionApprove = (value: any) => {
     writeContract({
       abi: wcheeseABI,
       address: WCHEESE_ADDRESS,
@@ -58,7 +66,7 @@ export default function Mint() {
     });
   };
 
-  const mintBrrrata = () => {
+  const handleTransactionMint = () => {
     const value = fromUnit('0.0001');
     // TODO: Don't forget about spin!
     console.log('>> mintBrrrata', value, spin);
@@ -113,6 +121,17 @@ export default function Mint() {
     setAmountPercent(100);
     setAmount(toBN(wBalance?.value));
   };
+
+  const [buttonText, handleClick, disabled]: any = getMintButtonLogic({
+    walletAddress: walletAddress,
+    chainId: chainId,
+    balance: toBN(wBalance?.value),
+    allowance: wAllowance,
+    handleTransactionApprove: handleTransactionApprove,
+    handleTransactionMint: handleTransactionMint,
+    openConnectModal: openConnectModal,
+    openChainModal: openChainModal,
+  });
   return (
     <div>
       <h2 className="mb-4 text-xl font-bold">Mint</h2>
@@ -124,10 +143,12 @@ export default function Mint() {
           autoComplete="off"
           onChange={(e) => updateAmountInput(e)}
           value={format(amount)}
+          disabled={disabled}
         />
         <button
           className="absolute right-2 top-1/2 -translate-y-1/2 rounded bg-gray-200 px-2 py-1 text-sm text-gray-700"
           onClick={() => setAmountMax()}
+          disabled={disabled}
         >
           Max
         </button>
@@ -136,7 +157,7 @@ export default function Mint() {
         <div className="flex items-center justify-between">
           <label className="text-gray-700">0</label>
           <span className="text-gray-700" id="rangeValue">
-            Balance: {format(toBN(wBalance?.value))}
+            Balance: {!wBalance ? '...' : format(toBN(wBalance?.value))}
           </span>
         </div>
         <input
@@ -146,13 +167,14 @@ export default function Mint() {
           value={amountPercent}
           onChange={(e) => updateAmountPercent(e)}
           className="h-2 w-full cursor-pointer appearance-none rounded-lg bg-gray-200"
+          disabled={disabled}
         />
       </div>
       <button
         className="mt-4 w-full rounded-lg bg-blue-500 py-3 font-medium text-white transition-colors hover:bg-blue-600"
-        onClick={() => mintBrrrata()}
+        onClick={() => handleClick()}
       >
-        Mint Brrata
+        {buttonText}
       </button>
     </div>
   );
