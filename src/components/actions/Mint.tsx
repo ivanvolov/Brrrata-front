@@ -64,14 +64,13 @@ export default function Mint() {
   };
 
   const handleTransactionMint = () => {
-    const value = fromUnit('0.0001');
     // TODO: Don't forget about spin!
-    console.log('>> mintBrrrata', value, spin);
+    console.log('>> mintBrrrata', format(amount), spin);
     writeContract({
       abi: brrrataABI,
       address: BRRRATA_ADDRESS,
       functionName: 'giveMeBrrrata',
-      args: [value, walletAddress],
+      args: [amount, walletAddress],
     });
   };
 

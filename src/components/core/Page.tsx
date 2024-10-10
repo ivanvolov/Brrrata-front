@@ -23,9 +23,7 @@ export default function Page2() {
                     <Mint />
                   </div>
 
-                  <div className="w-full max-w-xs rounded-xl bg-white p-6 shadow-2xl">
-                    <Burn />
-                  </div>
+                  <Burn />
 
                   <div className="w-full max-w-xs rounded-xl bg-white p-6 shadow-2xl">
                     <Stake />
