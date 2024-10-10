@@ -29,7 +29,7 @@ export const getStakeButtonLogic = (options: any) => {
     buttonText = 'Unsupported chain';
   } else if (isLoading) {
     disabled = true;
-    handleClick = openChainModal;
+    handleClick = emptyHandle;
     buttonText = 'Loading...';
   }
 
@@ -37,7 +37,7 @@ export const getStakeButtonLogic = (options: any) => {
     disabled = true;
     handleClick = emptyHandle;
     buttonText = 'Not enough Brrrata';
-  } else if (!amount || amount.isZero()) {
+  } else if (amount.isZero()) {
     disabled = false;
     handleClick = emptyHandle;
     buttonText = 'Enter Brrrata to stake';

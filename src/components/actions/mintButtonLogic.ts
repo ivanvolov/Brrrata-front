@@ -8,6 +8,7 @@ export const getMintButtonLogic = (options: any) => {
     balance,
     allowance,
     amount,
+    isLoading,
     handleTransactionApprove,
     handleTransactionMint,
     openConnectModal,
@@ -26,11 +27,13 @@ export const getMintButtonLogic = (options: any) => {
     disabled = true;
     handleClick = openChainModal;
     buttonText = 'Unsupported chain';
-  } else if (!balance || !allowance) {
+  } else if (isLoading) {
     disabled = true;
     handleClick = emptyHandle;
     buttonText = 'Loading...';
-  } else if (!amount || amount.isZero()) {
+  }
+
+  if (amount.isZero()) {
     disabled = false;
     handleClick = emptyHandle;
     buttonText = 'Enter WCHEESE to deposit';

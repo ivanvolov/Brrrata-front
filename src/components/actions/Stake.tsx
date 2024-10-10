@@ -10,16 +10,7 @@ import { useConnectModal, useChainModal } from '@rainbow-me/rainbowkit';
 import { useQueryClient } from '@tanstack/react-query';
 import fonduePitABI from '../../web3/abi/FonduePit.json';
 import brrrataABI from '../../web3/abi/Brrrata.json';
-import wcheeseABI from '../../web3/abi/WCHEESE.json';
-import {
-  BRRRATA_ADDRESS,
-  FONDUEPIT_ADDRESS,
-  WCHEESE_ADDRESS,
-  toUnit,
-  UINT_256_MAX,
-  fromUnit,
-  toNumber,
-} from '../../web3';
+import { BRRRATA_ADDRESS, FONDUEPIT_ADDRESS, UINT_256_MAX } from '../../web3';
 
 import { toBN, format, parse } from '../../shared/token';
 import { tokenAmountInputRestriction } from '../../shared/inputRestrictions';
@@ -36,7 +27,7 @@ export default function Stake() {
   const { openChainModal } = useChainModal();
 
   let {
-    data: brrrBalance,
+    data: balanceBRRR,
     queryKey: queryKeyBBrrr,
     isLoading: isLoadingBBRRR,
   }: any = useReadContract({
@@ -45,10 +36,10 @@ export default function Stake() {
     functionName: 'balanceOf',
     args: [walletAddress],
   });
-  brrrBalance = toBN(brrrBalance);
+  balanceBRRR = toBN(balanceBRRR);
 
   let {
-    data: brrrAllowance,
+    data: allowanceBRRR,
     queryKey: queryKeyABRRR,
     isLoading: isLoadingABRRR,
   }: any = useReadContract({
@@ -57,13 +48,15 @@ export default function Stake() {
     functionName: 'allowance',
     args: [walletAddress, FONDUEPIT_ADDRESS],
   });
-  brrrAllowance = toBN(brrrAllowance);
+  allowanceBRRR = toBN(allowanceBRRR);
   const isLoading = isLoadingBBRRR || isLoadingABRRR;
   console.log('>isLoading', isLoading);
 
-  // Notice: MOCK for testing TODO: remove in production
-  brrrBalance = toBN(1, 18);
-  brrrAllowance = toBN(5, 17);
+  // // Notice: MOCK for testing TODO: remove in production
+  // balanceBRRR = toBN(1, 18);
+  // allowanceBRRR = toBN(5, 17);
+
+  // ---- Modify contract
 
   const { writeContract } = useWriteContract();
 
@@ -102,7 +95,7 @@ export default function Stake() {
   const updateAmountPercent = (event: any) => {
     let _amountPercent = event.target.value;
     setAmountPercent(_amountPercent);
-    const _amount = toBN(brrrBalance)
+    const _amount = toBN(balanceBRRR)
       .mul(toBN(_amountPercent, 18))
       .div(toBN(100, 18));
     setAmount(_amount);
@@ -113,20 +106,20 @@ export default function Stake() {
     _amountString = tokenAmountInputRestriction(_amountString);
     let _amount = parse(_amountString);
     setAmount(_amount);
-    const _amountPercent = _amount.mul(toBN(100, 18)).div(toBN(brrrBalance));
+    const _amountPercent = _amount.mul(toBN(100, 18)).div(toBN(balanceBRRR));
     setAmountPercent(Number(format(_amountPercent)));
   };
 
   const setAmountMax = () => {
     setAmountPercent(100);
-    setAmount(toBN(brrrBalance));
+    setAmount(toBN(balanceBRRR));
   };
 
   const [buttonText, handleClick, disabled]: any = getStakeButtonLogic({
     walletAddress: walletAddress,
     chainId: chainId,
-    balance: brrrBalance,
-    allowance: brrrAllowance,
+    balance: balanceBRRR,
+    allowance: allowanceBRRR,
     amount: amount,
     isLoading: isLoading,
     handleTransactionApprove: handleTransactionApprove,
@@ -160,7 +153,7 @@ export default function Stake() {
         <div className="flex items-center justify-between">
           <label className="text-gray-700">0</label>
           <span className="text-gray-700" id="rangeValue">
-            Balance: {isLoading ? '...' : format(brrrBalance as any)}
+            Balance: {isLoadingBBRRR ? '...' : format(balanceBRRR as any)}
           </span>
         </div>
         <input

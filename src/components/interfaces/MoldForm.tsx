@@ -31,9 +31,17 @@ const MoldForm: React.FC<MoldFormProps> = ({ id }) => {
     functionName: 'getForm',
     args: [walletAddress, id],
   });
-  const { data: formData, queryKey: queryKeyFD } = result;
+  const {
+    data: formData,
+    queryKey: queryKeyFD,
+    isLoading: isLoadingFD,
+  } = result;
 
-  const { data: interest, queryKey: queryKeyInterest } = useReadContract({
+  const {
+    data: interest,
+    queryKey: queryKeyInterest,
+    isLoading: isLoadingInterest,
+  } = useReadContract({
     abi: fonduePitABI,
     address: FONDUEPIT_ADDRESS,
     functionName: 'getAccruedInterest',
@@ -56,7 +64,7 @@ const MoldForm: React.FC<MoldFormProps> = ({ id }) => {
       args: [formId],
     });
   };
-  if (!formData || !interest || !blockNumber) return <></>;
+  if (isLoadingInterest || isLoadingInterest || !blockNumber) return <></>;
 
   const amount = toBN(formData[0]);
   const PnL = toBN(interest).div(amount).mul(toBN(100, 18));

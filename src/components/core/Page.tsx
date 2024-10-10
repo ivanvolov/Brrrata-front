@@ -6,7 +6,7 @@ import Mint from '../actions/Mint';
 import Burn from '../actions/Burn';
 import Stake from '../actions/Stake';
 
-export default function Page2() {
+export default function Page() {
   return (
     <div>
       <body className="flex h-screen flex-col bg-gray-100 font-sans leading-normal tracking-normal">

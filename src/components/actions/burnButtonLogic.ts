@@ -7,6 +7,7 @@ export const getBurnButtonLogic = (options: any) => {
     chainId,
     balance,
     amount,
+    isLoading,
     handleTransactionBurn,
     openConnectModal,
     openChainModal,
@@ -24,11 +25,17 @@ export const getBurnButtonLogic = (options: any) => {
     disabled = true;
     handleClick = openChainModal;
     buttonText = 'Unsupported chain';
-  } else if (!balance) {
+  } else if (isLoading) {
     disabled = true;
     handleClick = emptyHandle;
     buttonText = 'Loading...';
-  } else if (!amount || amount.isZero()) {
+  }
+
+  if (balance.isZero()) {
+    disabled = true;
+    handleClick = emptyHandle;
+    buttonText = 'Not enough Brrrata';
+  } else if (amount.isZero()) {
     disabled = false;
     handleClick = emptyHandle;
     buttonText = 'Enter Brrrata to burn';

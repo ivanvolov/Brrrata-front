@@ -10,12 +10,7 @@ import { useConnectModal, useChainModal } from '@rainbow-me/rainbowkit';
 import { useQueryClient } from '@tanstack/react-query';
 import brrrataABI from '../../web3/abi/Brrrata.json';
 import wcheeseABI from '../../web3/abi/WCHEESE.json';
-import {
-  BRRRATA_ADDRESS,
-  WCHEESE_ADDRESS,
-  UINT_256_MAX,
-  fromUnit,
-} from '../../web3';
+import { BRRRATA_ADDRESS, WCHEESE_ADDRESS, UINT_256_MAX } from '../../web3';
 
 import { toBN, format, parse } from '../../shared/token';
 import { tokenAmountInputRestriction } from '../../shared/inputRestrictions';
@@ -31,26 +26,39 @@ export default function Mint() {
   const { openConnectModal } = useConnectModal();
   const { openChainModal } = useChainModal();
 
-  const { data: wBalance, queryKey: queryKeyWB } = useReadContract({
+  let {
+    data: balanceWC,
+    queryKey: queryKeyBWC,
+    isLoading: isLoadingBWC,
+  }: any = useReadContract({
     abi: wcheeseABI,
     address: WCHEESE_ADDRESS,
     functionName: 'balanceOf',
     args: [walletAddress],
   });
+  balanceWC = toBN(balanceWC);
 
-  const { data: wAllowance, queryKey: queryKeyAllowanceWC } = useReadContract({
+  let {
+    data: allowanceWC,
+    queryKey: queryKeyAWC,
+    isLoading: isLoadingAWC,
+  }: any = useReadContract({
     abi: wcheeseABI,
     address: WCHEESE_ADDRESS,
     functionName: 'allowance',
     args: [walletAddress, BRRRATA_ADDRESS],
   });
+  allowanceWC = toBN(allowanceWC);
+  const isLoading = isLoadingBWC || isLoadingAWC;
 
-  const { data: spin, queryKey: queryKeySpin } = useReadContract({
-    abi: brrrataABI,
-    address: BRRRATA_ADDRESS,
-    functionName: 'spins',
-    args: [walletAddress],
-  });
+  useEffect(() => {
+    if (blockNumber === undefined) return;
+    console.log('Update at BlockNumber:', blockNumber);
+    queryClient.invalidateQueries({ queryKey: queryKeyBWC });
+    queryClient.invalidateQueries({ queryKey: queryKeyAWC });
+  }, [blockNumber, queryClient, walletAddress]);
+
+  // ---- Modify contract
 
   const { writeContract } = useWriteContract();
 
@@ -65,7 +73,7 @@ export default function Mint() {
 
   const handleTransactionMint = () => {
     // TODO: Don't forget about spin!
-    console.log('>> mintBrrrata', format(amount), spin);
+    console.log('>> mintBrrrata', format(amount));
     writeContract({
       abi: brrrataABI,
       address: BRRRATA_ADDRESS,
@@ -73,14 +81,6 @@ export default function Mint() {
       args: [amount, walletAddress],
     });
   };
-
-  useEffect(() => {
-    if (blockNumber === undefined) return;
-    console.log('Update at BlockNumber:', blockNumber);
-    queryClient.invalidateQueries({ queryKey: queryKeyWB });
-    queryClient.invalidateQueries({ queryKey: queryKeyAllowanceWC });
-    queryClient.invalidateQueries({ queryKey: queryKeySpin });
-  }, [blockNumber, queryClient, walletAddress]);
 
   // ---- Just react stuff
 
@@ -91,9 +91,7 @@ export default function Mint() {
     let _amountPercent = event.target.value;
     // console.log('>> updateAmountPercent', _amountPercent);
     setAmountPercent(_amountPercent);
-    const _amount = toBN(wBalance)
-      .mul(toBN(_amountPercent, 18))
-      .div(toBN(100, 18));
+    const _amount = balanceWC.mul(toBN(_amountPercent, 18)).div(toBN(100, 18));
 
     // console.log('>> updateAmount', format(_amount));
     setAmount(_amount);
@@ -106,22 +104,23 @@ export default function Mint() {
     setAmount(_amount);
     // console.log('>> updateAmount', format(_amount));
 
-    const _amountPercent = _amount.mul(toBN(100, 18)).div(toBN(wBalance));
+    const _amountPercent = _amount.mul(toBN(100, 18)).div(balanceWC);
     setAmountPercent(Number(format(_amountPercent)));
     // console.log('>> updateAmountPercent', _amountPercent);
   };
 
   const setAmountMax = () => {
     setAmountPercent(100);
-    setAmount(toBN(wBalance));
+    setAmount(balanceWC);
   };
 
   const [buttonText, handleClick, disabled]: any = getMintButtonLogic({
     walletAddress: walletAddress,
     chainId: chainId,
-    balance: wBalance,
-    allowance: wAllowance,
+    balance: balanceWC,
+    allowance: allowanceWC,
     amount: amount,
+    isLoading: isLoading,
     handleTransactionApprove: handleTransactionApprove,
     handleTransactionMint: handleTransactionMint,
     openConnectModal: openConnectModal,
@@ -152,7 +151,7 @@ export default function Mint() {
         <div className="flex items-center justify-between">
           <label className="text-gray-700">0</label>
           <span className="text-gray-700" id="rangeValue">
-            Balance: {!wBalance ? '...' : format(toBN(wBalance))}
+            Balance: {isLoadingBWC ? '...' : format(balanceWC)}
           </span>
         </div>
         <input
