@@ -10,6 +10,8 @@ export const WCHEESE_ADDRESS = '0x6537507cE0d262AE9d7af0fE83A91b019B98397A';
 export const UINT_256_MAX =
   '115792089237316195423570985008687907853269984665640564039457584007913129639935';
 
+export const ACTIVE_CHAIN_ID = 9209108;
+
 export function toUnit(value: BigNumberish): string {
   if (value == null || value == undefined) return '0';
   return formatUnits(value, 18);

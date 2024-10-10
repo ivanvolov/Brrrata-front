@@ -1,4 +1,5 @@
 import { toBN } from '../../shared/token';
+import { ACTIVE_CHAIN_ID } from '../../web3';
 
 export const getBurnButtonLogic = (options: any) => {
   const {
@@ -19,7 +20,7 @@ export const getBurnButtonLogic = (options: any) => {
     disabled = true;
     buttonText = 'Connect wallet';
     handleClick = openConnectModal;
-  } else if (chainId != 9209108) {
+  } else if (chainId != ACTIVE_CHAIN_ID) {
     disabled = true;
     handleClick = openChainModal;
     buttonText = 'Unsupported chain';

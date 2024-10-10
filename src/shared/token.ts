@@ -1,4 +1,5 @@
-import { formatUnits, parseUnits, toBigInt } from 'ethers/utils';
+import { BigNumberish } from 'ethers';
+import { formatUnits, parseUnits } from 'ethers/utils';
 import { BigNumber } from '@ethersproject/bignumber';
 
 export function toBN(value: any, decimals?: number): BigNumber {
@@ -6,6 +7,10 @@ export function toBN(value: any, decimals?: number): BigNumber {
   if (decimals)
     return BigNumber.from(value).mul(BigNumber.from(10).pow(decimals));
   return BigNumber.from(value);
+}
+
+export function toNumber(value: BigNumberish): number {
+  return Number(value.toString());
 }
 
 export const format = (value: BigNumber): string => {
