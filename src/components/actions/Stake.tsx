@@ -12,7 +12,7 @@ import fonduePitABI from '../../web3/abi/FonduePit.json';
 import brrrataABI from '../../web3/abi/Brrrata.json';
 import { BRRRATA_ADDRESS, FONDUEPIT_ADDRESS, UINT_256_MAX } from '../../web3';
 
-import { toBN, format, parse } from '../../shared/token';
+import { toBN, format, parse, toNumber } from '../../shared/token';
 import { tokenAmountInputRestriction } from '../../shared/inputRestrictions';
 import { getStakeButtonLogic } from './stakeButtonLogic';
 
@@ -50,11 +50,11 @@ export default function Stake() {
   });
   allowanceBRRR = toBN(allowanceBRRR);
   const isLoading = isLoadingBBRRR || isLoadingABRRR;
-  console.log('>isLoading', isLoading);
 
-  // // Notice: MOCK for testing TODO: remove in production
+  // Notice: MOCK for testing TODO: remove in production
   // balanceBRRR = toBN(1, 18);
   // allowanceBRRR = toBN(5, 17);
+  // console.log('>isLoading', isLoading);
 
   // ---- Modify contract
 
@@ -90,7 +90,7 @@ export default function Stake() {
 
   const [amountPercent, setAmountPercent] = useState(0);
   const [amount, setAmount] = useState(BigNumber.from(0));
-  const [periodId, setPeriodId] = useState(0);
+  const [periodId, setPeriodId] = useState(2);
 
   const updateAmountPercent = (event: any) => {
     let _amountPercent = event.target.value;
@@ -108,6 +108,10 @@ export default function Stake() {
     setAmount(_amount);
     const _amountPercent = _amount.mul(toBN(100, 18)).div(toBN(balanceBRRR));
     setAmountPercent(Number(format(_amountPercent)));
+  };
+
+  const handleChange = (event: any) => {
+    setPeriodId(toNumber(event.target.value));
   };
 
   const setAmountMax = () => {
@@ -168,10 +172,14 @@ export default function Stake() {
       </div>
       <div className="mb-4 mt-4">
         <label className="mb-2 block text-gray-700">Staking Duration</label>
-        <select className="w-full cursor-pointer rounded border bg-white p-2">
-          <option>1 week</option>
-          <option>2 weeks</option>
-          <option>3 weeks</option>
+        <select
+          className="w-full cursor-pointer rounded border bg-white p-2"
+          value={periodId}
+          onChange={handleChange}
+        >
+          <option value="0">1 week - 4% APY</option>
+          <option value="1">2 weeks - 10% APY</option>
+          <option value="2">3 weeks - 15% APY</option>
         </select>
       </div>
       <button

@@ -4,7 +4,8 @@ import { useReadContract, useAccount, useBlockNumber } from 'wagmi';
 
 import { useQueryClient } from '@tanstack/react-query';
 import fonduePitABI from '../../web3/abi/FonduePit.json';
-import { FONDUEPIT_ADDRESS, toNumber, ACTIVE_CHAIN_ID } from '../../web3';
+import { FONDUEPIT_ADDRESS, ACTIVE_CHAIN_ID } from '../../web3';
+import { toNumber } from '../../shared/token';
 
 export default function Buckets() {
   const queryClient = useQueryClient();

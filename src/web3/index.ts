@@ -1,5 +1,5 @@
-import { BigNumberish } from 'ethers';
-import { formatUnits, parseUnits } from 'ethers/utils';
+// import { BigNumberish } from 'ethers';
+// import { formatUnits, parseUnits } from 'ethers/utils';
 
 export const BRRRATA_ADDRESS = '0xceB0EFa4eF35e3De939A27397F378F8A6667f33f';
 
@@ -12,25 +12,25 @@ export const UINT_256_MAX =
 
 export const ACTIVE_CHAIN_ID = 9209108;
 
-export function toUnit(value: BigNumberish): string {
-  if (value == null || value == undefined) return '0';
-  return formatUnits(value, 18);
-}
+// export function toUnit(value: BigNumberish): string {
+//   if (value == null || value == undefined) return '0';
+//   return formatUnits(value, 18);
+// }
 
-export function toNumber(value: BigNumberish): number {
-  return Number(value.toString());
-}
+// export function toNumber(value: BigNumberish): number {
+//   return Number(value.toString());
+// }
 
-export function fromUnit(value: string): BigNumberish {
-  return parseUnits(value, 18);
-}
+// export function fromUnit(value: string): BigNumberish {
+//   return parseUnits(value, 18);
+// }
 
-export const removeZerosFromBehind = (value: any): string => {
-  value = value.toString();
-  while (value[value.length - 1] === '0') value = value.slice(0, -1);
-  if (value == 0) return '0';
-  return value;
-};
+// export const removeZerosFromBehind = (value: any): string => {
+//   value = value.toString();
+//   while (value[value.length - 1] === '0') value = value.slice(0, -1);
+//   if (value == 0) return '0';
+//   return value;
+// };
 
 export const periodMapping: { [key: string]: number } = {
   '0': 5040,

@@ -8,8 +8,8 @@ import {
 
 import { useQueryClient } from '@tanstack/react-query';
 import fonduePitABI from '../../web3/abi/FonduePit.json';
-import { FONDUEPIT_ADDRESS, toNumber, periodMapping } from '../../web3';
-import { toBN, format } from '../../shared/token';
+import { FONDUEPIT_ADDRESS, periodMapping } from '../../web3';
+import { toBN, format, toNumber } from '../../shared/token';
 
 interface MoldFormProps {
   id: number;
@@ -64,7 +64,7 @@ const MoldForm: React.FC<MoldFormProps> = ({ id }) => {
       args: [formId],
     });
   };
-  if (isLoadingInterest || isLoadingInterest || !blockNumber) return <></>;
+  if (isLoadingInterest || isLoadingFD || !blockNumber) return <></>;
 
   const amount = toBN(formData[0]);
   const PnL = toBN(interest).div(amount).mul(toBN(100, 18));
