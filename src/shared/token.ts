@@ -3,7 +3,7 @@ import { formatUnits, parseUnits } from 'ethers/utils';
 import { BigNumber } from '@ethersproject/bignumber';
 
 export function toBN(value: any, decimals?: number): BigNumber {
-  if (!value) return BigNumber.from(0);
+  if (value == undefined || value == null) return BigNumber.from(0);
   if (decimals)
     return BigNumber.from(value).mul(BigNumber.from(10).pow(decimals));
   return BigNumber.from(value);

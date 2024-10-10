@@ -1,13 +1,16 @@
 import { toBN } from '../../shared/token';
 import { ACTIVE_CHAIN_ID } from '../../web3';
 
-export const getBurnButtonLogic = (options: any) => {
+export const getStakeButtonLogic = (options: any) => {
   const {
     walletAddress,
     chainId,
     balance,
+    allowance,
     amount,
-    handleTransactionBurn,
+    isLoading,
+    handleTransactionApprove,
+    handleTransactionStake,
     openConnectModal,
     openChainModal,
   } = options;
@@ -24,22 +27,32 @@ export const getBurnButtonLogic = (options: any) => {
     disabled = true;
     handleClick = openChainModal;
     buttonText = 'Unsupported chain';
-  } else if (!balance) {
+  } else if (isLoading) {
+    disabled = true;
+    handleClick = openChainModal;
+    buttonText = 'Loading...';
+  }
+
+  if (balance.isZero()) {
     disabled = true;
     handleClick = emptyHandle;
-    buttonText = 'Loading...';
+    buttonText = 'Not enough Brrrata';
   } else if (!amount || amount.isZero()) {
     disabled = false;
     handleClick = emptyHandle;
-    buttonText = 'Enter Brrrata to burn';
+    buttonText = 'Enter Brrrata to stake';
   } else if (amount.gt(toBN(balance))) {
     disabled = false;
     handleClick = emptyHandle;
     buttonText = 'Not enough Brrrata';
+  } else if (amount.gt(toBN(allowance))) {
+    disabled = false;
+    handleClick = handleTransactionApprove;
+    buttonText = 'Approve Brrrata';
   } else {
     disabled = false;
-    handleClick = handleTransactionBurn;
-    buttonText = 'Burn Brrrata';
+    handleClick = handleTransactionStake;
+    buttonText = 'Stake Brrrata';
   }
 
   return [buttonText, handleClick, disabled];

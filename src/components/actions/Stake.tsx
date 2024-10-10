@@ -1,11 +1,11 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import {
   useReadContract,
   useAccount,
   useBlockNumber,
-  useBalance,
   useWriteContract,
 } from 'wagmi';
+import { useConnectModal, useChainModal } from '@rainbow-me/rainbowkit';
 
 import { useQueryClient } from '@tanstack/react-query';
 import fonduePitABI from '../../web3/abi/FonduePit.json';
@@ -21,131 +21,155 @@ import {
   toNumber,
 } from '../../web3';
 
+import { toBN, format, parse } from '../../shared/token';
+import { tokenAmountInputRestriction } from '../../shared/inputRestrictions';
+import { getStakeButtonLogic } from './stakeButtonLogic';
+
+import { BigNumber } from '@ethersproject/bignumber';
+
 export default function Stake() {
   const queryClient = useQueryClient();
 
   const { data: blockNumber } = useBlockNumber({ watch: true });
-  const { address: walletAddress } = useAccount();
+  const { address: walletAddress, chainId: chainId } = useAccount();
+  const { openConnectModal } = useConnectModal();
+  const { openChainModal } = useChainModal();
 
-  const { data: balance, queryKey: queryKeyB } = useBalance({
-    address: walletAddress,
-  });
-
-  const { data: wBalance, queryKey: queryKeyWB } = useBalance({
-    address: walletAddress,
-    token: WCHEESE_ADDRESS,
-  });
-
-  const { data: brrrBalance, queryKey: queryKeyWBrrr } = useBalance({
-    address: walletAddress,
-    token: BRRRATA_ADDRESS,
-  });
-
-  const { data: lastFormId, queryKey: queryKeyLF } = useReadContract({
-    abi: fonduePitABI,
-    address: FONDUEPIT_ADDRESS,
-    functionName: 'formsId',
+  let {
+    data: brrrBalance,
+    queryKey: queryKeyBBrrr,
+    isLoading: isLoadingBBRRR,
+  }: any = useReadContract({
+    abi: brrrataABI,
+    address: BRRRATA_ADDRESS,
+    functionName: 'balanceOf',
     args: [walletAddress],
   });
+  brrrBalance = toBN(brrrBalance);
 
-  const { data: allowanceWC, queryKey: queryKeyAllowanceWC } = useReadContract({
-    abi: wcheeseABI,
-    address: WCHEESE_ADDRESS,
-    functionName: 'allowance',
-    args: [walletAddress, BRRRATA_ADDRESS],
-  });
-
-  const { data: allowanceBR, queryKey: queryKeyAllowanceBR } = useReadContract({
+  let {
+    data: brrrAllowance,
+    queryKey: queryKeyABRRR,
+    isLoading: isLoadingABRRR,
+  }: any = useReadContract({
     abi: brrrataABI,
     address: BRRRATA_ADDRESS,
     functionName: 'allowance',
     args: [walletAddress, FONDUEPIT_ADDRESS],
   });
+  brrrAllowance = toBN(brrrAllowance);
+  const isLoading = isLoadingBBRRR || isLoadingABRRR;
+  console.log('>isLoading', isLoading);
 
-  const { data: spin, queryKey: queryKeySpin } = useReadContract({
-    abi: brrrataABI,
-    address: BRRRATA_ADDRESS,
-    functionName: 'spins',
-    args: [walletAddress],
-  });
+  // Notice: MOCK for testing TODO: remove in production
+  brrrBalance = toBN(1, 18);
+  brrrAllowance = toBN(5, 17);
 
   const { writeContract } = useWriteContract();
-
-  const allowToBrrrata = (value: any) => {
-    writeContract({
-      abi: wcheeseABI,
-      address: WCHEESE_ADDRESS,
-      functionName: 'approve',
-      args: [BRRRATA_ADDRESS, value],
-    });
-  };
-
-  const allowToPit = (value: any) => {
-    writeContract({
-      abi: brrrataABI,
-      address: BRRRATA_ADDRESS,
-      functionName: 'approve',
-      args: [FONDUEPIT_ADDRESS, value],
-    });
-  };
-
-  const mintBrrrata = (value: any) => {
-    // TODO: Don't forget about spin!
-    console.log('>> mintBrrrata', value);
-    writeContract({
-      abi: brrrataABI,
-      address: BRRRATA_ADDRESS,
-      functionName: 'giveMeBrrrata',
-      args: [value, walletAddress],
-    });
-  };
-
-  const lockBrrrata = (value: any, periodId: number) => {
-    console.log('>> lockBrrrata', value, periodId);
-    writeContract({
-      abi: fonduePitABI,
-      address: FONDUEPIT_ADDRESS,
-      functionName: 'stake',
-      args: [value, walletAddress, periodId],
-    });
-  };
 
   useEffect(() => {
     if (blockNumber === undefined) return;
     console.log('Update at BlockNumber:', blockNumber);
-    queryClient.invalidateQueries({ queryKey: queryKeyB });
-    queryClient.invalidateQueries({ queryKey: queryKeyWB });
-    queryClient.invalidateQueries({ queryKey: queryKeyWBrrr });
-    queryClient.invalidateQueries({ queryKey: queryKeyLF });
-    queryClient.invalidateQueries({ queryKey: queryKeyAllowanceWC });
-    queryClient.invalidateQueries({ queryKey: queryKeyAllowanceBR });
-    queryClient.invalidateQueries({ queryKey: queryKeySpin });
+    queryClient.invalidateQueries({ queryKey: queryKeyBBrrr });
+    queryClient.invalidateQueries({ queryKey: queryKeyABRRR });
   }, [blockNumber, queryClient, walletAddress]);
+
+  const handleTransactionApprove = () => {
+    writeContract({
+      abi: brrrataABI,
+      address: BRRRATA_ADDRESS,
+      functionName: 'approve',
+      args: [FONDUEPIT_ADDRESS, UINT_256_MAX],
+    });
+  };
+
+  const handleTransactionStake = () => {
+    console.log('>> lockBrrrata', format(amount), periodId);
+    writeContract({
+      abi: fonduePitABI,
+      address: FONDUEPIT_ADDRESS,
+      functionName: 'stake',
+      args: [amount, walletAddress, periodId],
+    });
+  };
+
+  // ---- Just react stuff
+
+  const [amountPercent, setAmountPercent] = useState(0);
+  const [amount, setAmount] = useState(BigNumber.from(0));
+  const [periodId, setPeriodId] = useState(0);
+
+  const updateAmountPercent = (event: any) => {
+    let _amountPercent = event.target.value;
+    setAmountPercent(_amountPercent);
+    const _amount = toBN(brrrBalance)
+      .mul(toBN(_amountPercent, 18))
+      .div(toBN(100, 18));
+    setAmount(_amount);
+  };
+
+  const updateAmountInput = (event: any) => {
+    let _amountString = event.target.value;
+    _amountString = tokenAmountInputRestriction(_amountString);
+    let _amount = parse(_amountString);
+    setAmount(_amount);
+    const _amountPercent = _amount.mul(toBN(100, 18)).div(toBN(brrrBalance));
+    setAmountPercent(Number(format(_amountPercent)));
+  };
+
+  const setAmountMax = () => {
+    setAmountPercent(100);
+    setAmount(toBN(brrrBalance));
+  };
+
+  const [buttonText, handleClick, disabled]: any = getStakeButtonLogic({
+    walletAddress: walletAddress,
+    chainId: chainId,
+    balance: brrrBalance,
+    allowance: brrrAllowance,
+    amount: amount,
+    isLoading: isLoading,
+    handleTransactionApprove: handleTransactionApprove,
+    handleTransactionStake: handleTransactionStake,
+    openConnectModal: openConnectModal,
+    openChainModal: openChainModal,
+  });
+
   return (
-    <div>
+    <div className="w-full max-w-xs rounded-xl bg-white p-6 shadow-2xl">
       <h2 className="mb-4 text-xl font-bold">Stake</h2>
       <div className="relative mb-4">
         <input
-          type="number"
+          type="string"
+          placeholder="0"
+          autoComplete="off"
+          onChange={(e) => updateAmountInput(e)}
+          value={format(amount)}
+          disabled={disabled}
           className="w-full rounded border p-2 pr-16 text-right [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
-          placeholder="Amount to Stake"
         />
-        <button className="absolute right-2 top-1/2 -translate-y-1/2 rounded bg-gray-200 px-2 py-1 text-sm text-gray-700">
+        <button
+          className="absolute right-2 top-1/2 -translate-y-1/2 rounded bg-gray-200 px-2 py-1 text-sm text-gray-700"
+          onClick={() => setAmountMax()}
+          disabled={disabled}
+        >
           Max
         </button>
       </div>
       <div className="flex flex-col space-y-2">
         <div className="flex items-center justify-between">
-          <label className="text-gray-700">Amount</label>
-          <span className="text-gray-700" id="rangeValue3">
-            0
+          <label className="text-gray-700">0</label>
+          <span className="text-gray-700" id="rangeValue">
+            Balance: {isLoading ? '...' : format(brrrBalance as any)}
           </span>
         </div>
         <input
           type="range"
           min="0"
           max="100"
-          value="0"
+          value={amountPercent}
+          onChange={(e) => updateAmountPercent(e)}
+          disabled={disabled}
           className="h-2 w-full cursor-pointer appearance-none rounded-lg bg-gray-200"
         />
       </div>
@@ -157,8 +181,11 @@ export default function Stake() {
           <option>3 weeks</option>
         </select>
       </div>
-      <button className="mt-4 w-full rounded-lg bg-green-500 py-3 font-medium text-white transition-colors hover:bg-green-600">
-        Stake Brrata
+      <button
+        className="mt-4 w-full rounded-lg bg-green-500 py-3 font-medium text-white transition-colors hover:bg-green-600"
+        onClick={() => handleClick()}
+      >
+        {buttonText}
       </button>
     </div>
   );

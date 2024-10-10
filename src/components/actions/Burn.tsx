@@ -87,7 +87,7 @@ export default function Burn() {
     openConnectModal: openConnectModal,
     openChainModal: openChainModal,
   });
-  if (!brrrBalance) return <div></div>;
+  if (brrrBalance == undefined) return <div></div>;
   else {
     return (
       <div className="w-full max-w-xs rounded-xl bg-white p-6 shadow-2xl">
