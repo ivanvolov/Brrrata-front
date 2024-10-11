@@ -74,7 +74,7 @@ export default function Mint() {
 
   const handleTransactionMint = async () => {
     // TODO: Don't forget about spin!
-    await insureSpin(walletAddress);
+    // await insureSpin(walletAddress);
     // console.log('>> mintBrrrata', format(amount));
     // writeContract({
     //   abi: brrrataABI,
