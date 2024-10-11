@@ -78,7 +78,7 @@ const MoldForm: React.FC<MoldFormProps> = ({ id }) => {
   if (bloksLeft < 0) bloksLeft = 0;
 
   return (
-    <div className="w-1/3 max-w-xs rounded-xl bg-white p-6 shadow-2xl">
+    <div className="max-w-xs rounded-xl bg-white p-1 shadow-1xl">
       <div className="rounded-lg border p-4 transition-colors hover:bg-gray-50">
         <div className="mb-3 grid grid-cols-1 gap-4 text-sm">
           <div>

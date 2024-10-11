@@ -2,20 +2,18 @@ import { ConnectButton } from '@rainbow-me/rainbowkit';
 
 export default function Header() {
   return (
-    <header className="w-full flex items-center justify-between bg-gradient-to-r from-blue-500 to-purple-500 p-4 sm:p-6 shadow-lg">
-      <div className="flex w-full items-center justify-between">
-        {/* Heading with 80% width */}
-        <div className="w-[80%] max-w-[1000px]">
+    <header className="w-full flex items-center bg-gradient-to-r from-blue-500 to-purple-500 pt-4 pb-4 pr-6 pl-6 shadow-lg">
+      <div className="flex w-full items-center">
+        <div className="w-[75%] flex justify-center">
           <h1
-            className="font-bold text-white text-left sm:text-center"
+            className="font-bold text-white text-center"
             style={{ fontSize: '2vw' }}
           >
             Brrrata, where cheese meets extraordinary yield and modern
             ponzinomics
           </h1>
         </div>
-        {/* Connect Button with 20% width and no extra space to the right */}
-        <div className="w-[25%] ml-auto flex-shrink-0 flex justify-end pr-0">
+        <div className="w-[25%] flex justify-end">
           <ConnectButton
             showBalance={false}
             chainStatus="icon"

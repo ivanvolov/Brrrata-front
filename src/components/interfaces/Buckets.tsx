@@ -33,7 +33,10 @@ export default function Buckets() {
       <>
         {Array.from({ length: toNumber(lastFormId as any) }, (_, i) => i).map(
           (id) => (
-            <MoldForm key={id} id={id} />
+            <>
+              <MoldForm key={id} id={id} />
+              <MoldForm key={id + 1} id={id} />
+            </>
           ),
         )}
       </>

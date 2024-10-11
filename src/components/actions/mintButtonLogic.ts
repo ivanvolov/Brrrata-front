@@ -36,15 +36,15 @@ export const getMintButtonLogic = (options: any) => {
   if (amount.isZero()) {
     disabled = false;
     handleClick = emptyHandle;
-    buttonText = 'Enter WCHEESE to deposit';
+    buttonText = 'Enter 🧀 to deposit';
   } else if (amount.gt(toBN(balance))) {
     disabled = false;
     handleClick = emptyHandle;
-    buttonText = 'Not enough WCHEESE';
+    buttonText = 'Not enough 🧀';
   } else if (amount.gt(toBN(allowance))) {
     disabled = false;
     handleClick = handleTransactionApprove;
-    buttonText = 'Approve WCHEESE';
+    buttonText = 'Approve 🧀';
   } else {
     disabled = false;
     handleClick = handleTransactionMint;
