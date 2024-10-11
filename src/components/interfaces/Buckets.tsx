@@ -30,16 +30,13 @@ export default function Buckets() {
     return <div>You don't have any brrrata staked</div>;
   } else {
     return (
-      <div
-        id="buckets"
-        className="w-full flex-grow mt-8 flex justify-center flex-wrap gap-4"
-      >
+      <>
         {Array.from({ length: toNumber(lastFormId as any) }, (_, i) => i).map(
           (id) => (
             <MoldForm key={id} id={id} />
           ),
         )}
-      </div>
+      </>
     );
   }
 }

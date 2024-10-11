@@ -97,7 +97,7 @@ export default function Burn() {
     openChainModal: openChainModal,
   });
   return (
-    <div className="w-full max-w-xs rounded-xl bg-white p-6 shadow-2xl">
+    <>
       <h2 className="mb-4 text-xl font-bold">Burn</h2>
       <div className="relative mb-4">
         <input
@@ -140,6 +140,6 @@ export default function Burn() {
       >
         {buttonText}
       </button>
-    </div>
+    </>
   );
 }

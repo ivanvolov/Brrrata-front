@@ -1,48 +1,66 @@
 import React, { useState, useRef, useEffect } from 'react';
 
+const VIDEO_SOURCES = [
+  { src: '/assets/factory2.mp4', playbackRate: 0.7 },
+  { src: '/assets/factory3.mp4', playbackRate: 1.5 },
+] as const;
+
 export default function Printer() {
   const [isVideo, setIsVideo] = useState(false);
-  const [videoSrc, setVideoSrc] = useState(''); // State to store the video source
-  const [playbackRate, setPlaybackRate] = useState(1); // State to store playback speed
+  const [videoIndex, setVideoIndex] = useState(0);
   const videoRef = useRef<HTMLVideoElement | null>(null);
+  const preloadedVideosRef = useRef<{ [key: string]: HTMLVideoElement }>({});
+
+  // Preload videos when component mounts
+  useEffect(() => {
+    // Create hidden video elements for each source
+    VIDEO_SOURCES.forEach(({ src }) => {
+      const video = document.createElement('video');
+      video.src = src;
+      video.preload = 'auto'; // Force preloading
+      video.style.display = 'none';
+      video.muted = true;
+
+      // Store the preloaded video element
+      preloadedVideosRef.current[src] = video;
+
+      // Append to document to start preloading
+      document.body.appendChild(video);
+    });
+
+    // Cleanup function to remove hidden videos
+    return () => {
+      Object.values(preloadedVideosRef.current).forEach((video) => {
+        document.body.removeChild(video);
+      });
+    };
+  }, []);
 
   const handleImageClick = () => {
-    const randomValue = Math.random();
-    let selectedVideoSrc, selectedPlaybackRate;
-
-    if (randomValue < 0.5) {
-      selectedVideoSrc = './public/assets/factory2.mp4';
-      selectedPlaybackRate = 0.7;
-    } else {
-      selectedVideoSrc = './public/assets/factory3.mp4';
-      selectedPlaybackRate = 1.5;
-    }
-
-    setVideoSrc(selectedVideoSrc);
-    setPlaybackRate(selectedPlaybackRate);
+    const newIndex = Math.floor(Math.random() * VIDEO_SOURCES.length);
+    setVideoIndex(newIndex);
     setIsVideo(true);
+
+    // Set playback rate after a short delay to ensure it's applied
+    if (videoRef.current) {
+      setTimeout(() => {
+        if (videoRef.current) {
+          videoRef.current.playbackRate = VIDEO_SOURCES[newIndex].playbackRate;
+        }
+      }, 0);
+    }
   };
 
   const handleVideoEnded = () => {
     setIsVideo(false);
   };
 
-  useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.playbackRate = playbackRate;
-    }
-  }, [isVideo]);
-
   return (
-    <section
-      id="about"
-      className="w-full max-w-2xl rounded-xl bg-white p-6 shadow-2xl"
-    >
-      {/* <h2 className="mb-4 text-2xl font-bold">Printer go brrr</h2> */}
+    <div>
       {!isVideo ? (
         <img
           width="100%"
-          src="./public/assets/factory0.png"
+          src="/assets/factory0.png"
           alt="MemCoin"
           onClick={handleImageClick}
           className="mt-4 rounded-lg shadow-md cursor-pointer"
@@ -51,7 +69,7 @@ export default function Printer() {
         <video
           width="100%"
           ref={videoRef}
-          src={videoSrc} // Use the randomly selected video source
+          src={VIDEO_SOURCES[videoIndex].src}
           autoPlay
           muted
           onEnded={handleVideoEnded}
@@ -61,6 +79,6 @@ export default function Printer() {
           Your browser does not support the video tag.
         </video>
       )}
-    </section>
+    </div>
   );
 }

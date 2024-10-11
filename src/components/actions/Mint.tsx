@@ -129,7 +129,7 @@ export default function Mint() {
     openChainModal: openChainModal,
   });
   return (
-    <div>
+    <>
       <h2 className="mb-4 text-xl font-bold">Mint</h2>
       <div className="relative mb-4">
         <input
@@ -172,6 +172,6 @@ export default function Mint() {
       >
         {buttonText}
       </button>
-    </div>
+    </>
   );
 }
