@@ -9,41 +9,20 @@ import Stake from '../actions/Stake';
 export default function Page() {
   return (
     <div>
-      <body className="flex h-screen flex-col bg-gray-100 font-sans leading-normal tracking-normal">
+      <body className="min-h-screen bg-gray-100 font-sans">
         <Header />
 
-        <main className="flex flex-grow items-center justify-center p-8">
-          <div className="flex w-full max-w-6xl flex-col items-stretch justify-center">
-            <div className="flex w-full gap-8">
-              <section
-                id="about"
-                className="w-full max-w-2xl rounded-xl bg-white p-6 shadow-2xl"
-              >
-                <Printer />
-              </section>
-
-              <section id="app" className="flex">
-                <div className="flex flex-col justify-between space-y-4">
-                  <div className="w-full max-w-xs rounded-xl bg-white p-6 shadow-2xl">
-                    <Mint />
-                  </div>
-
-                  <div className="w-full max-w-xs rounded-xl bg-white p-6 shadow-2xl">
-                    <Burn />
-                  </div>
-                  <div className="w-full max-w-xs rounded-xl bg-white p-6 shadow-2xl">
-                    <Stake />
-                  </div>
-                </div>
-              </section>
+        <main className="flex justify-center py-8">
+          <div className="mx-auto flex w-[85vw]">
+            {/* Left Column - Printer */}
+            <div className="w-[35%] rounded-xl bg-white shadow-2xl">
+              <Printer />
             </div>
 
-            <section
-              id="buckets"
-              className="w-full flex-grow mt-8 flex justify-center flex-wrap gap-4"
-            >
-              <Buckets />
-            </section>
+            {/* Right Column - White placeholder */}
+            <div className="ml-8 w-[50%] rounded-xl bg-white p-6 shadow-2xl">
+              {/* Content will go here later */}
+            </div>
           </div>
         </main>
 

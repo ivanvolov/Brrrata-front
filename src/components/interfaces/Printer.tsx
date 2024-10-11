@@ -63,7 +63,7 @@ export default function Printer() {
           src="/assets/factory0.png"
           alt="MemCoin"
           onClick={handleImageClick}
-          className="mt-4 rounded-lg shadow-md cursor-pointer"
+          className="rounded-lg shadow-md cursor-pointer"
         />
       ) : (
         <video
