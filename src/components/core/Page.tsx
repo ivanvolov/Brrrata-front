@@ -1,10 +1,7 @@
 import Footer from './Footer';
 import Header from './Header';
-import Buckets from '../interfaces/Buckets';
 import Printer from '../interfaces/Printer';
-import Mint from '../actions/Mint';
-import Burn from '../actions/Burn';
-import Stake from '../actions/Stake';
+import Tabs from './Tabs';
 
 export default function Page() {
   return (
@@ -21,29 +18,10 @@ export default function Page() {
             </div>
 
             {/* Right Column */}
-            <div className="ml-8 w-[48%] rounded-xl bg-none p-0 flex w-full justify-between gap-4">
-              <section
-                id="app"
-                className="w-[50%] p-0 flex flex-col justify-between space-y-4 gap-4"
-              >
-                <div className="w-full max-w-xs rounded-xl bg-white p-6 shadow-2xl">
-                  <Mint />
-                </div>
-
-                <div className="w-full max-w-xs rounded-xl bg-white p-6 shadow-2xl">
-                  <Burn />
-                </div>
-
-                <div className="w-full max-w-xs rounded-xl bg-white p-6 shadow-2xl">
-                  <Stake />
-                </div>
-              </section>
-              <section
-                id="buckets"
-                className="w-[50%] p-0 flex flex-col flex-wrap gap-4"
-              >
-                <Buckets />
-              </section>
+            <div className="ml-8 w-[48%] rounded-xl bg-none p-0 flex w-full justify-between gap-4 bg-none">
+              <div className="w-full flex items-center justify-center bg-none">
+                <Tabs />
+              </div>
             </div>
             <div className="w-[2%]"></div>
           </div>
