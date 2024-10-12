@@ -13,28 +13,35 @@ export default function Printer() {
   const [imageHeight, setImageHeight] = useState<number | null>(null);
   const preloadedVideosRef = useRef<{ [key: string]: HTMLVideoElement }>({});
 
-  // Preload videos when component mounts
   useEffect(() => {
-    // Create hidden video elements for each source
+    // Preload videos
     VIDEO_SOURCES.forEach(({ src }) => {
       const video = document.createElement('video');
       video.src = src;
-      video.preload = 'auto'; // Force preloading
+      video.preload = 'auto';
       video.style.display = 'none';
       video.muted = true;
 
-      // Store the preloaded video element
       preloadedVideosRef.current[src] = video;
-
-      // Append to document to start preloading
       document.body.appendChild(video);
     });
 
-    // Cleanup function to remove hidden videos
+    const handleResize = () => {
+      if (imageRef.current) {
+        setImageHeight(imageRef.current.clientHeight);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    // Set height initially
+    handleResize();
+
     return () => {
+      // Cleanup
       Object.values(preloadedVideosRef.current).forEach((video) => {
         document.body.removeChild(video);
       });
+      window.removeEventListener('resize', handleResize);
     };
   }, []);
 
