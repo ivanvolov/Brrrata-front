@@ -1,12 +1,31 @@
+import { useEffect } from 'react';
+
 import { useState } from 'react';
+import { useAccount } from 'wagmi';
 
 import Mint from '../actions/Mint';
 import Burn from '../actions/Burn';
 import Stake from '../actions/Stake';
 import Buckets from '../interfaces/Buckets';
 
+import { ACTIVE_CHAIN_ID } from '../../web3';
+
 export default function Tabs() {
   const [activeTab, setActiveTab] = useState('stake');
+
+  const { address: walletAddress, chainId: chainId } = useAccount();
+
+  useEffect(() => {
+    if (!walletAddress || chainId != ACTIVE_CHAIN_ID) {
+      setActiveTab('mint');
+    }
+  }, [chainId, walletAddress]);
+
+  const _setActiveTab = (tab: string) => {
+    if (!walletAddress || chainId != ACTIVE_CHAIN_ID) {
+      if (tab === 'mint') setActiveTab(tab);
+    } else setActiveTab(tab);
+  };
 
   const renderContent = () => {
     switch (activeTab) {
@@ -46,22 +65,22 @@ export default function Tabs() {
           <NavItem
             isActive={activeTab === 'mint'}
             iconType="mint"
-            onClick={() => setActiveTab('mint')}
+            onClick={() => _setActiveTab('mint')}
           />
           <NavItem
             isActive={activeTab === 'burn'}
             iconType="burn"
-            onClick={() => setActiveTab('burn')}
+            onClick={() => _setActiveTab('burn')}
           />
           <NavItem
             isActive={activeTab === 'stake'}
             iconType="stake"
-            onClick={() => setActiveTab('stake')}
+            onClick={() => _setActiveTab('stake')}
           />
           <NavItem
             isActive={activeTab === 'unstake'}
             iconType="unstake"
-            onClick={() => setActiveTab('unstake')}
+            onClick={() => _setActiveTab('unstake')}
           />
         </ul>
       </div>

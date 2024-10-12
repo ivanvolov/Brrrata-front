@@ -29,9 +29,7 @@ export const getBurnButtonLogic = (options: any) => {
     disabled = true;
     handleClick = emptyHandle;
     buttonText = 'Loading...';
-  }
-
-  if (balance.isZero()) {
+  } else if (balance.isZero()) {
     disabled = true;
     handleClick = emptyHandle;
     buttonText = 'Not enough Brrrata';

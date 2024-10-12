@@ -31,9 +31,7 @@ export const getMintButtonLogic = (options: any) => {
     disabled = true;
     handleClick = emptyHandle;
     buttonText = 'Loading...';
-  }
-
-  if (amount.isZero()) {
+  } else if (amount.isZero()) {
     disabled = false;
     handleClick = emptyHandle;
     buttonText = 'Enter 🧀 to deposit';
