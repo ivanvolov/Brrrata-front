@@ -13,18 +13,16 @@ export default function Page() {
           <div className="flex w-[100vw]">
             <div className="w-[5%]"></div>
 
-            <div className="flex">
-              {/* Left Column - Printer */}
-              <div className="w-[45%] rounded-xl bg-white shadow-2xl flex flex-col">
-                <Printer />
-              </div>
+            {/* Left Column - Printer */}
+            <div className="w-[45%] rounded-xl bg-white shadow-2xl flex flex-col">
+              <Printer />
+            </div>
 
-              {/* Right Column */}
-              <div className="ml-8 w-[48%] rounded-xl bg-none p-0 flex flex-col justify-between gap-4 max-h-full">
-                <div className="w-full flex items-center justify-center max-h-full">
-                  <div className="flex-col bg-white rounded-lg">
-                    <Tabs />
-                  </div>
+            {/* Right Column */}
+            <div className="ml-8 w-[48%] rounded-xl bg-none p-0 flex flex-col justify-between gap-4">
+              <div className="w-full flex items-center justify-center">
+                <div className="flex-col bg-white rounded-lg">
+                  <Tabs />
                 </div>
               </div>
             </div>
