@@ -9,6 +9,8 @@ export default function Printer() {
   const [isVideo, setIsVideo] = useState(false);
   const [videoIndex, setVideoIndex] = useState(0);
   const videoRef = useRef<HTMLVideoElement | null>(null);
+  const imageRef = useRef<HTMLImageElement | null>(null);
+  const [imageHeight, setImageHeight] = useState<number | null>(null);
   const preloadedVideosRef = useRef<{ [key: string]: HTMLVideoElement }>({});
 
   // Preload videos when component mounts
@@ -55,13 +57,26 @@ export default function Printer() {
     setIsVideo(false);
   };
 
+  const handleImageLoad = () => {
+    if (imageRef.current) {
+      setImageHeight(imageRef.current.clientHeight);
+    }
+  };
+
   return (
-    <div>
+    <div
+      style={{
+        minHeight: imageHeight ? `${imageHeight}px` : 'auto',
+        overflow: 'hidden',
+      }}
+    >
       {!isVideo ? (
         <img
+          ref={imageRef}
           width="100%"
           src="/assets/factory0.png"
           alt="MemCoin"
+          onLoad={handleImageLoad}
           onClick={handleImageClick}
           className="rounded-lg shadow-md cursor-pointer"
         />
