@@ -4,28 +4,28 @@ export default function Footer() {
       <nav className="mb-4">
         <ul className="flex justify-center space-x-6">
           <li>
-            <a href="#about" className="text-white hover:underline">
+            <a href="#" className="text-white hover:underline">
               About
             </a>
           </li>
           <li>
-            <a href="#roadmap" className="text-white hover:underline">
+            <a href="#" className="text-white hover:underline">
               Roadmap
             </a>
           </li>
           <li>
-            <a href="#team" className="text-white hover:underline">
+            <a href="#" className="text-white hover:underline">
               Team
             </a>
           </li>
           <li>
-            <a href="#contact" className="text-white hover:underline">
+            <a href="#" className="text-white hover:underline">
               Contact
             </a>
           </li>
         </ul>
       </nav>
-      <p>&copy; 2023 MemCoin. All rights reserved.</p>
+      <p>&copy; 2024 Brrrata. All rights cheesed.</p>
     </footer>
   );
 }
