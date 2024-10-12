@@ -23,7 +23,7 @@ export const storage = createStorage({
 export const config = getDefaultConfig({
   appName: 'Brrrata Web App',
   projectId: '1590ddedb144ba56c0842d3b13c4297b',
-  chains: [mainnet, cheeseChainTestnet],
+  chains: [cheeseChainTestnet],
   ssr: false,
   storage: storage,
 });
