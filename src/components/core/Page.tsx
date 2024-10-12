@@ -12,16 +12,16 @@ export default function Page() {
       <body className="min-h-screen bg-gray-100 font-sans">
         <Header />
 
-        <main className="flex justify-center py-6">
-          <div className="mx-auto flex w-[100vw]">
+        <main className="flex justify-center py-6 p-0">
+          <div className="flex w-[100vw]">
             <div className="w-[5%]"></div>
             {/* Left Column - Printer */}
-            <div className="w-[50%] rounded-xl bg-white shadow-2xl">
+            <div className="w-[45%] rounded-xl bg-white shadow-2xl">
               <Printer />
             </div>
 
             {/* Right Column */}
-            <div className="ml-8 w-[53%] rounded-xl bg-none p-0 flex w-full justify-between gap-4">
+            <div className="ml-8 w-[48%] rounded-xl bg-none p-0 flex w-full justify-between gap-4">
               <section
                 id="app"
                 className="w-[50%] p-0 flex flex-col justify-between space-y-4 gap-4"
