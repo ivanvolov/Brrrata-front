@@ -11,7 +11,7 @@ import Buckets from '../interfaces/Buckets';
 import { ACTIVE_CHAIN_ID } from '../../web3';
 
 export default function Tabs() {
-  const [activeTab, setActiveTab] = useState('stake');
+  const [activeTab, setActiveTab] = useState('mint');
 
   const { address: walletAddress, chainId: chainId } = useAccount();
 
