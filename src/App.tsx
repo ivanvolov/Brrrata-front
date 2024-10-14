@@ -4,6 +4,7 @@ import { RainbowKitProvider } from '@rainbow-me/rainbowkit';
 import { WagmiProvider } from 'wagmi';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import Page from './components/core/Page';
+import CheeseClickEffect from './components/actions/CheeseClickEffect';
 
 import { config } from './web3/wagmiConfig';
 
@@ -13,7 +14,7 @@ const App = () => {
     <WagmiProvider config={config as any} reconnectOnMount={true}>
       <QueryClientProvider client={queryClient}>
         <RainbowKitProvider>
-          <Page />
+        <Page/>
         </RainbowKitProvider>
       </QueryClientProvider>
     </WagmiProvider>
