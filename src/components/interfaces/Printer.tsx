@@ -1,11 +1,15 @@
 import React, { useState, useRef, useEffect } from 'react';
 
+import { Modal } from './MintModal';
+
 const VIDEO_SOURCES = [
   { src: '/assets/factory2.mp4', playbackRate: 0.7 },
   { src: '/assets/factory3.mp4', playbackRate: 1.5 },
 ] as const;
 
 export default function Printer() {
+  const [showModal, setShowModal] = React.useState(false);
+
   const [isVideo, setIsVideo] = useState(false);
   const [videoIndex, setVideoIndex] = useState(0);
   const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -46,18 +50,19 @@ export default function Printer() {
   }, []);
 
   const handleImageClick = () => {
-    const newIndex = Math.floor(Math.random() * VIDEO_SOURCES.length);
-    setVideoIndex(newIndex);
-    setIsVideo(true);
+    setShowModal(true);
+    // const newIndex = Math.floor(Math.random() * VIDEO_SOURCES.length);
+    // setVideoIndex(newIndex);
+    // setIsVideo(true);
 
-    // Set playback rate after a short delay to ensure it's applied
-    if (videoRef.current) {
-      setTimeout(() => {
-        if (videoRef.current) {
-          videoRef.current.playbackRate = VIDEO_SOURCES[newIndex].playbackRate;
-        }
-      }, 0);
-    }
+    // // Set playback rate after a short delay to ensure it's applied
+    // if (videoRef.current) {
+    //   setTimeout(() => {
+    //     if (videoRef.current) {
+    //       videoRef.current.playbackRate = VIDEO_SOURCES[newIndex].playbackRate;
+    //     }
+    //   }, 0);
+    // }
   };
 
   const handleVideoEnded = () => {
@@ -101,6 +106,7 @@ export default function Printer() {
           Your browser does not support the video tag.
         </video>
       )}
+      <Modal showModal={showModal} setShowModal={setShowModal} />
     </div>
   );
 }
