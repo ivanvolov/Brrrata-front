@@ -6,6 +6,19 @@
   },
   {
     "type": "function",
+    "name": "BASE_APY",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
     "name": "BRRRATA",
     "inputs": [],
     "outputs": [
@@ -13,6 +26,53 @@
         "name": "",
         "type": "address",
         "internalType": "address"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "SECONDS_IN_YEAR",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "_getAccruedInterest",
+    "inputs": [
+      {
+        "name": "periodId",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "amount",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "blockStart",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "blockEnd",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
       }
     ],
     "stateMutability": "view"
@@ -235,6 +295,19 @@
   },
   {
     "type": "function",
+    "name": "setBaseAPY",
+    "inputs": [
+      {
+        "name": "_baseAPY",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
     "name": "setPeriodData",
     "inputs": [
       {
@@ -249,6 +322,19 @@
       },
       {
         "name": "multiplier",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "setSecondsInYear",
+    "inputs": [
+      {
+        "name": "_secondsInYear",
         "type": "uint256",
         "internalType": "uint256"
       }
@@ -323,6 +409,11 @@
       }
     ],
     "anonymous": false
+  },
+  {
+    "type": "error",
+    "name": "ContractPaused",
+    "inputs": []
   },
   {
     "type": "error",

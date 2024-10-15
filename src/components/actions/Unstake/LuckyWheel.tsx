@@ -1,29 +1,44 @@
 import React, { useState } from 'react';
 
 import { Wheel } from 'react-custom-roulette';
+import { sendRevealRequest } from '../../../shared/server';
 
 interface ModalProps {
   showModal: boolean;
   setShowModal: (value: boolean) => void;
+  walletAddress: any;
 }
 
 // https://www.npmjs.com/package/react-custom-roulette
 const data = [
-  { option: '0', style: { backgroundColor: 'green', textColor: 'black' } },
-  { option: '1', style: { backgroundColor: 'white' } },
-  { option: '2' },
+  {
+    option: 'Normal Cheese',
+    style: { backgroundColor: 'green', textColor: 'black' },
+  },
+  { option: 'Double Cheese', style: { backgroundColor: 'white' } },
+  { option: 'Moldy Cheese' },
+  { option: 'Meltdown 1' },
+  { option: 'Meltdown 2' },
+  { option: 'Rare Cheese NFTs' },
 ];
 
-export const Modal: React.FC<ModalProps> = ({ showModal, setShowModal }) => {
+export const LuckyWheel: React.FC<ModalProps> = ({
+  showModal,
+  setShowModal,
+  walletAddress,
+}) => {
   if (!showModal) return null;
 
+  const [finishState, setFinishState] = useState(false);
   const [mustSpin, setMustSpin] = useState(false);
   const [prizeNumber, setPrizeNumber] = useState(0);
 
-  const handleSpinClick = () => {
+  const handleSpinClick = async () => {
     if (!mustSpin) {
-      const newPrizeNumber = Math.floor(Math.random() * data.length);
-      setPrizeNumber(newPrizeNumber);
+      //TODO: here is to waiting somehow
+      const result = await sendRevealRequest(walletAddress);
+      console.log(result);
+      setPrizeNumber(result.spin - 1);
       setMustSpin(true);
     }
   };
@@ -55,6 +70,7 @@ export const Modal: React.FC<ModalProps> = ({ showModal, setShowModal }) => {
                 data={data}
                 onStopSpinning={() => {
                   setMustSpin(false);
+                  setFinishState(true);
                 }}
               />
             </div>
@@ -67,13 +83,15 @@ export const Modal: React.FC<ModalProps> = ({ showModal, setShowModal }) => {
               >
                 Close
               </button>
-              <button
-                className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                type="button"
-                onClick={handleSpinClick}
-              >
-                Spin the wheel
-              </button>
+              {!finishState ? (
+                <button
+                  className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                  type="button"
+                  onClick={handleSpinClick}
+                >
+                  Spin the wheel
+                </button>
+              ) : null}
             </div>
           </div>
         </div>

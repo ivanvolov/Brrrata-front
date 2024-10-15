@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 
-import { Modal } from './MintModal';
+import { LuckyWheel } from '../actions/Unstake/LuckyWheel';
 
 const VIDEO_SOURCES = [
   { src: '/assets/factory2.mp4', playbackRate: 0.7 },
@@ -106,7 +106,7 @@ export default function Printer() {
           Your browser does not support the video tag.
         </video>
       )}
-      <Modal showModal={showModal} setShowModal={setShowModal} />
+      <LuckyWheel showModal={showModal} setShowModal={setShowModal} />
     </div>
   );
 }

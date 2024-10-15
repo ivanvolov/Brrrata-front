@@ -15,7 +15,6 @@ import { BRRRATA_ADDRESS, WCHEESE_ADDRESS, UINT_256_MAX } from '../../web3';
 import { toBN, format, parse } from '../../shared/token';
 import { tokenAmountInputRestriction } from '../../shared/inputRestrictions';
 import { getMintButtonLogic } from '../actions/mintButtonLogic';
-import { insureSpin } from '../../shared/server';
 
 import { BigNumber } from '@ethersproject/bignumber';
 
@@ -73,15 +72,13 @@ export default function Mint() {
   };
 
   const handleTransactionMint = async () => {
-    // TODO: Don't forget about spin!
-    // await insureSpin(walletAddress);
-    // console.log('>> mintBrrrata', format(amount));
-    // writeContract({
-    //   abi: brrrataABI,
-    //   address: BRRRATA_ADDRESS,
-    //   functionName: 'giveMeBrrrata',
-    //   args: [amount, walletAddress],
-    // });
+    console.log('>> mintBrrrata', format(amount));
+    writeContract({
+      abi: brrrataABI,
+      address: BRRRATA_ADDRESS,
+      functionName: 'giveMeBrrrata',
+      args: [amount, walletAddress],
+    });
   };
 
   // ---- Just react stuff

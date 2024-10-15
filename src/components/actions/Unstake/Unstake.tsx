@@ -1,13 +1,19 @@
 import { useEffect } from 'react';
 import MoldForm from './MoldForm';
+import Reveal from './Reveal';
 import { useReadContract, useAccount, useBlockNumber } from 'wagmi';
 
 import { useQueryClient } from '@tanstack/react-query';
-import fonduePitABI from '../../web3/abi/FonduePit.json';
-import { FONDUEPIT_ADDRESS, ACTIVE_CHAIN_ID } from '../../web3';
-import { toNumber } from '../../shared/token';
+import fonduePitABI from '../../../web3/abi/FonduePit.json';
+import brrrataABI from '../../../web3/abi/Brrrata.json';
+import {
+  FONDUEPIT_ADDRESS,
+  ACTIVE_CHAIN_ID,
+  BRRRATA_ADDRESS,
+} from '../../../web3';
+import { toNumber } from '../../../shared/token';
 
-export default function Buckets() {
+export default function Unstake() {
   const queryClient = useQueryClient();
   const { data: blockNumber } = useBlockNumber({ watch: true });
   const { address: walletAddress, chainId: chainId } = useAccount();
@@ -19,24 +25,33 @@ export default function Buckets() {
     args: [walletAddress],
   });
 
+  const { data: isReveal, queryKey: queryKeyIR } = useReadContract({
+    abi: brrrataABI,
+    address: BRRRATA_ADDRESS,
+    functionName: 'isReveal',
+    args: [walletAddress],
+  });
+
   useEffect(() => {
     if (blockNumber === undefined) return;
     queryClient.invalidateQueries({ queryKey: queryKeyLF });
+    queryClient.invalidateQueries({ queryKey: queryKeyIR });
   }, [blockNumber, queryClient, walletAddress]);
 
   if (!walletAddress || chainId != ACTIVE_CHAIN_ID) {
     return <></>;
-  } else if (!lastFormId || lastFormId === 0) {
+  } else if ((!lastFormId || lastFormId === 0) && !isReveal) {
+    console.log('Is reveal', isReveal, walletAddress);
     return <div>You don't have any brrrata staked</div>;
   } else {
+    if (!lastFormId || lastFormId === 0) return <Reveal />;
     return (
       <>
+        <Reveal />
         {Array.from({ length: toNumber(lastFormId as any) }, (_, i) => i).map(
           (id) => (
             <div>
               <MoldForm key={id} id={id} />
-              <MoldForm key={id + 1} id={id} />
-              <MoldForm key={id + 2} id={id} />
             </div>
           ),
         )}

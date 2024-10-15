@@ -22,7 +22,7 @@ import {
   toNumber,
 } from '../web3';
 
-import MoldForm from './interfaces/MoldForm';
+import MoldForm from './actions/Unstake/MoldForm';
 
 export default function Page() {
   const queryClient = useQueryClient();

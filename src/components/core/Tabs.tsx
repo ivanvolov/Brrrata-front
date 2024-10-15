@@ -6,7 +6,7 @@ import { useAccount } from 'wagmi';
 import Mint from '../actions/Mint';
 import Burn from '../actions/Burn';
 import Stake from '../actions/Stake';
-import Buckets from '../interfaces/Buckets';
+import Unstake from '../actions/Unstake/Unstake';
 
 import { ACTIVE_CHAIN_ID } from '../../web3';
 
@@ -50,7 +50,7 @@ export default function Tabs() {
       case 'unstake':
         return (
           <div className="overflow-y-auto p-6">
-            <Buckets />
+            <Unstake />
           </div>
         );
       default:
@@ -68,6 +68,11 @@ export default function Tabs() {
             onClick={() => _setActiveTab('mint')}
           />
           <NavItem
+            isActive={activeTab === 'unstake'}
+            iconType="unstake"
+            onClick={() => _setActiveTab('unstake')}
+          />
+          <NavItem
             isActive={activeTab === 'burn'}
             iconType="burn"
             onClick={() => _setActiveTab('burn')}
@@ -76,11 +81,6 @@ export default function Tabs() {
             isActive={activeTab === 'stake'}
             iconType="stake"
             onClick={() => _setActiveTab('stake')}
-          />
-          <NavItem
-            isActive={activeTab === 'unstake'}
-            iconType="unstake"
-            onClick={() => _setActiveTab('unstake')}
           />
         </ul>
       </div>

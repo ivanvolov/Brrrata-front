@@ -7,9 +7,9 @@ import {
 } from 'wagmi';
 
 import { useQueryClient } from '@tanstack/react-query';
-import fonduePitABI from '../../web3/abi/FonduePit.json';
-import { FONDUEPIT_ADDRESS, periodMapping } from '../../web3';
-import { toBN, format, toNumber } from '../../shared/token';
+import fonduePitABI from '../../../web3/abi/FonduePit.json';
+import { FONDUEPIT_ADDRESS, periodMapping } from '../../../web3';
+import { toBN, format, toNumber } from '../../../shared/token';
 
 interface MoldFormProps {
   id: number;
