@@ -1,16 +1,12 @@
 import React, { useEffect } from 'react';
-import {
-  useReadContract,
-  useAccount,
-  useBlockNumber,
-  useWriteContract,
-  useBlock,
-} from 'wagmi';
+import { useReadContract, useAccount, useWriteContract, useBlock } from 'wagmi';
 
 import { useQueryClient } from '@tanstack/react-query';
 import fonduePitABI from '../../../web3/abi/FonduePit.json';
 import { FONDUEPIT_ADDRESS, periodMapping } from '../../../web3';
 import { toBN, format, toNumber } from '../../../shared/token';
+
+import moment from 'moment';
 
 interface MoldFormProps {
   id: number;
@@ -72,13 +68,13 @@ const MoldForm: React.FC<MoldFormProps> = ({ id }) => {
 
   const periodId = toNumber(formData[1]);
 
-  const startTS = toNumber(formData[2]);
-  const endTS = startTS + periodMapping[periodId];
-  let leftTS = endTS - toNumber(blockData.timestamp);
+  const start = moment(toNumber(formData[2]));
+  console.log(start.format());
+  const end = moment(toNumber(formData[2]) + periodMapping[periodId]);
+  console.log(end.format());
+  const timeDiff = end.from(start);
 
-  console.log('>leftTS:', leftTS);
-
-  if (leftTS < 0) leftTS = 0;
+  // console.log('>timeDiff:', timeDiff);
 
   return (
     <div className="max-w-xs rounded-xl bg-white p-1 shadow-1xl">
@@ -96,15 +92,11 @@ const MoldForm: React.FC<MoldFormProps> = ({ id }) => {
           </div>
           <div>
             <span className="text-gray-600">Staked:</span>
-            <span className="ml-1 font-medium">
-              {/* {blockToDays(endBlock)} days ago */}
-            </span>
+            <span className="ml-1 font-medium">{timeDiff}</span>
           </div>
           <div>
             <span className="text-gray-600">Remaining:</span>
-            <span className="ml-1 font-medium">
-              {/* {blockToDays(bloksLeft)} days remaining */}
-            </span>
+            <span className="ml-1 font-medium">{timeDiff}</span>
           </div>
         </div>
         <button
