@@ -1,10 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useReadContract, useAccount, useWriteContract, useBlock } from 'wagmi';
 
 import { useQueryClient } from '@tanstack/react-query';
 import fonduePitABI from '../../../web3/abi/FonduePit.json';
 import { FONDUEPIT_ADDRESS, periodMapping } from '../../../web3';
 import { toBN, format, toNumber } from '../../../shared/token';
+import { toast } from 'react-toastify';
 
 import moment from 'moment';
 
@@ -49,7 +50,29 @@ const MoldForm: React.FC<MoldFormProps> = ({ id }) => {
     queryClient.invalidateQueries({ queryKey: queryKeyInterest });
   }, [blockData, queryClient, walletAddress]);
 
-  const { writeContract } = useWriteContract();
+  // ---- Modify contract
+
+  const { writeContract, isPending, isSuccess } = useWriteContract();
+
+  // ---- Notifications START
+
+  const [notificationId, setNotificationId] = useState(-1);
+  useEffect(() => {
+    if (isPending && notificationId === -1) {
+      const newId: any = toast.loading('Pending transaction...');
+      setNotificationId(newId);
+    }
+    if (!isPending && notificationId !== -1) {
+      toast.dismiss(notificationId);
+      setNotificationId(-1);
+      if (isSuccess) toast.success('Tx Successful!');
+      else toast.warning('Tx rejected!');
+    }
+    console.log('>> isPending:', isPending);
+    console.log('>> isSuccess:', isSuccess);
+  }, [isPending, isSuccess]);
+
+  // ---- Notifications END
 
   const unlock = (formId: any) => {
     writeContract({

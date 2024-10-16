@@ -16,6 +16,7 @@ import { tokenAmountInputRestriction } from '../../shared/inputRestrictions';
 import { getBurnButtonLogic } from './burnButtonLogic';
 
 import { BigNumber } from '@ethersproject/bignumber';
+import { toast } from 'react-toastify';
 
 export default function Burn() {
   const queryClient = useQueryClient();
@@ -46,7 +47,27 @@ export default function Burn() {
 
   // ---- Modify contract
 
-  const { writeContract } = useWriteContract();
+  const { writeContract, isPending, isSuccess } = useWriteContract();
+
+  // ---- Notifications START
+
+  const [notificationId, setNotificationId] = useState(-1);
+  useEffect(() => {
+    if (isPending && notificationId === -1) {
+      const newId: any = toast.loading('Pending transaction...');
+      setNotificationId(newId);
+    }
+    if (!isPending && notificationId !== -1) {
+      toast.dismiss(notificationId);
+      setNotificationId(-1);
+      if (isSuccess) toast.success('Tx Successful!');
+      else toast.warning('Tx rejected!');
+    }
+    console.log('>> isPending:', isPending);
+    console.log('>> isSuccess:', isSuccess);
+  }, [isPending, isSuccess]);
+
+  // ---- Notifications END
 
   const handleTransactionBurn = () => {
     writeContract({

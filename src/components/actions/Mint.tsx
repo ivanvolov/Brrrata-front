@@ -18,6 +18,7 @@ import { getRevealState } from '../../shared/server';
 import { getMintButtonLogic } from '../actions/mintButtonLogic';
 
 import { BigNumber } from '@ethersproject/bignumber';
+import { toast } from 'react-toastify';
 
 interface MintProps {
   revealTabTransfer: any;
@@ -65,7 +66,27 @@ const Mint: React.FC<MintProps> = ({ revealTabTransfer }) => {
 
   // ---- Modify contract
 
-  const { writeContract } = useWriteContract();
+  const { writeContract, isPending, isSuccess } = useWriteContract();
+
+  // ---- Notifications START
+
+  const [notificationId, setNotificationId] = useState(-1);
+  useEffect(() => {
+    if (isPending && notificationId === -1) {
+      const newId: any = toast.loading('Pending transaction...');
+      setNotificationId(newId);
+    }
+    if (!isPending && notificationId !== -1) {
+      toast.dismiss(notificationId);
+      setNotificationId(-1);
+      if (isSuccess) toast.success('Tx Successful!');
+      else toast.warning('Tx rejected!');
+    }
+    console.log('>> isPending:', isPending);
+    console.log('>> isSuccess:', isSuccess);
+  }, [isPending, isSuccess]);
+
+  // ---- Notifications END
 
   const handleTransactionApprove = () => {
     writeContract({
@@ -77,19 +98,14 @@ const Mint: React.FC<MintProps> = ({ revealTabTransfer }) => {
   };
 
   const handleTransactionMint = async () => {
+    // toast.warning('Wow so easy!');
+    // toast.success('Wow so easy!');
+
     writeContract({
       abi: brrrataABI,
       address: BRRRATA_ADDRESS,
       functionName: 'giveMeBrrrata',
       args: [amount, walletAddress],
-      // onSettled: (data: any) => {
-      //   if (data) {
-      //     console.log
-      //   }
-      // },
-      // onError: error => {
-      //        notifyError({ message: error?.data?.message ?? error?.message })
-      // },
     });
   };
 
