@@ -1,41 +1,27 @@
-import { useEffect, useState } from 'react';
-import { useReadContract, useAccount, useBlockNumber } from 'wagmi';
+import React, { useEffect, useState } from 'react';
+import { useAccount } from 'wagmi';
 
-import { useQueryClient } from '@tanstack/react-query';
-import brrrataABI from '../../../web3/abi/Brrrata.json';
-
-import { BRRRATA_ADDRESS } from '../../../web3';
-import { toBN, format } from '../../../shared/token';
 import { LuckyWheel } from './LuckyWheel';
+import { format } from '../../../shared/token';
 
-const Reveal = () => {
-  const queryClient = useQueryClient();
+interface RevealProps {
+  setRevealExist: any;
+  canReveal: boolean;
+  spin: number;
+  amount: any;
+}
 
-  const { data: blockNumber } = useBlockNumber({ watch: true });
+const Reveal: React.FC<RevealProps> = ({
+  canReveal,
+  spin,
+  amount,
+  setRevealExist,
+}: any) => {
   const { address: walletAddress } = useAccount();
-
-  let {
-    data: luckyCheeseAmount,
-    queryKey: queryKeyLC,
-    isLoading: isLoadingLC,
-  }: any = useReadContract({
-    abi: brrrataABI,
-    address: BRRRATA_ADDRESS,
-    functionName: 'luckyCheese',
-    args: [walletAddress],
-  });
-  luckyCheeseAmount = toBN(luckyCheeseAmount);
-
-  useEffect(() => {
-    if (blockNumber === undefined) return;
-    queryClient.invalidateQueries({ queryKey: queryKeyLC });
-  }, [blockNumber, queryClient, walletAddress]);
 
   // ---- Just react stuff
 
   const [showModal, setShowModal] = useState(false);
-
-  if (isLoadingLC || !blockNumber) return <></>;
 
   return (
     <div className="max-w-xs rounded-xl bg-white p-1 shadow-1xl">
@@ -43,22 +29,23 @@ const Reveal = () => {
         <div className="mb-3 grid grid-cols-1 gap-4 text-sm">
           <div>
             <span className="text-gray-600">Amount:</span>
-            <span className="ml-1 font-medium">
-              {format(luckyCheeseAmount)} BRRATA
-            </span>
+            <span className="ml-1 font-medium">{format(amount)} BRRATA</span>
           </div>
         </div>
         <button
           className="w-full rounded-lg bg-purple-500 py-2 font-medium text-white transition-colors hover:bg-purple-600"
           onClick={() => setShowModal(true)}
+          disabled={!canReveal}
         >
-          Reveal
+          {canReveal ? 'Reveal' : 'Wait for oracle randomness'}
         </button>
       </div>
       <LuckyWheel
+        setRevealExist={setRevealExist}
         showModal={showModal}
         setShowModal={setShowModal}
         walletAddress={walletAddress}
+        spin={spin}
       />
     </div>
   );

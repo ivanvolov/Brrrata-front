@@ -291,7 +291,7 @@
   },
   {
     "type": "function",
-    "name": "isReveal",
+    "name": "canReveal",
     "inputs": [
       {
         "name": "to",

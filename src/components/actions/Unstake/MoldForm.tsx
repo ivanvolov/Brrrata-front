@@ -4,6 +4,7 @@ import {
   useAccount,
   useBlockNumber,
   useWriteContract,
+  useBlock,
 } from 'wagmi';
 
 import { useQueryClient } from '@tanstack/react-query';
@@ -15,15 +16,13 @@ interface MoldFormProps {
   id: number;
 }
 
-function blockToDays(block: number) {
-  return (block / 1000000000000).toFixed(0);
-}
-
 const MoldForm: React.FC<MoldFormProps> = ({ id }) => {
   const queryClient = useQueryClient();
 
-  const { data: blockNumber } = useBlockNumber({ watch: true });
+  const { data: blockData } = useBlock({ watch: true });
   const { address: walletAddress } = useAccount();
+
+  // TODO: add here is isFprm Exist or amount check
 
   const result: any = useReadContract({
     abi: fonduePitABI,
@@ -49,10 +48,10 @@ const MoldForm: React.FC<MoldFormProps> = ({ id }) => {
   });
 
   useEffect(() => {
-    if (blockNumber === undefined) return;
+    if (blockData === undefined) return;
     queryClient.invalidateQueries({ queryKey: queryKeyFD });
     queryClient.invalidateQueries({ queryKey: queryKeyInterest });
-  }, [blockNumber, queryClient, walletAddress]);
+  }, [blockData, queryClient, walletAddress]);
 
   const { writeContract } = useWriteContract();
 
@@ -64,18 +63,22 @@ const MoldForm: React.FC<MoldFormProps> = ({ id }) => {
       args: [formId],
     });
   };
-  if (isLoadingInterest || isLoadingFD || !blockNumber) return <></>;
+  if (isLoadingInterest || isLoadingFD || !blockData) return <></>;
+
+  console.log('> formData', formData);
 
   const amount = toBN(formData[0]);
   const PnL = toBN(interest).div(amount).mul(toBN(100, 18));
 
   const periodId = toNumber(formData[1]);
-  // const startBlock = toNumber(formData[2]);
-  const startBlock = 275092 - 10000;
-  const endBlock = startBlock + periodMapping[periodId];
-  let bloksLeft = endBlock - toNumber(blockNumber);
-  console.log('>blockLeft:', bloksLeft);
-  if (bloksLeft < 0) bloksLeft = 0;
+
+  const startTS = toNumber(formData[2]);
+  const endTS = startTS + periodMapping[periodId];
+  let leftTS = endTS - toNumber(blockData.timestamp);
+
+  console.log('>leftTS:', leftTS);
+
+  if (leftTS < 0) leftTS = 0;
 
   return (
     <div className="max-w-xs rounded-xl bg-white p-1 shadow-1xl">
@@ -94,13 +97,13 @@ const MoldForm: React.FC<MoldFormProps> = ({ id }) => {
           <div>
             <span className="text-gray-600">Staked:</span>
             <span className="ml-1 font-medium">
-              {blockToDays(endBlock)} days ago
+              {/* {blockToDays(endBlock)} days ago */}
             </span>
           </div>
           <div>
             <span className="text-gray-600">Remaining:</span>
             <span className="ml-1 font-medium">
-              {blockToDays(bloksLeft)} days remaining
+              {/* {blockToDays(bloksLeft)} days remaining */}
             </span>
           </div>
         </div>

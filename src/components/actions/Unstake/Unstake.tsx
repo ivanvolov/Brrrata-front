@@ -1,22 +1,44 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import MoldForm from './MoldForm';
 import Reveal from './Reveal';
 import { useReadContract, useAccount, useBlockNumber } from 'wagmi';
 
 import { useQueryClient } from '@tanstack/react-query';
 import fonduePitABI from '../../../web3/abi/FonduePit.json';
-import brrrataABI from '../../../web3/abi/Brrrata.json';
-import {
-  FONDUEPIT_ADDRESS,
-  ACTIVE_CHAIN_ID,
-  BRRRATA_ADDRESS,
-} from '../../../web3';
+import { FONDUEPIT_ADDRESS, ACTIVE_CHAIN_ID } from '../../../web3';
 import { toNumber } from '../../../shared/token';
+import { getRevealState } from '../../../shared/server';
+import { BigNumber } from '@ethersproject/bignumber';
+import { toBN } from '../../../shared/token';
 
 export default function Unstake() {
   const queryClient = useQueryClient();
   const { data: blockNumber } = useBlockNumber({ watch: true });
   const { address: walletAddress, chainId: chainId } = useAccount();
+
+  const [revealExist, setRevealExist] = useState(false);
+
+  const [canReveal, setCanReveal] = useState(false);
+  const [amount, setAmount] = useState(BigNumber.from(0));
+  const [spin, setSpin] = useState(0);
+
+  useEffect(() => {
+    if (blockNumber === undefined) return;
+    const update = async () => {
+      const result = await getRevealState(walletAddress);
+      console.log('> result', result);
+      if (result.reveal) {
+        setRevealExist(true);
+        setCanReveal(result.reveal.canReveal);
+        setAmount(toBN(String(result.reveal.amount)));
+        setSpin(result.reveal.spin - 1);
+      } else {
+        setRevealExist(false);
+        setCanReveal(false);
+      }
+    };
+    update();
+  }, [blockNumber, walletAddress]);
 
   const { data: lastFormId, queryKey: queryKeyLF } = useReadContract({
     abi: fonduePitABI,
@@ -25,29 +47,25 @@ export default function Unstake() {
     args: [walletAddress],
   });
 
-  const { data: isReveal, queryKey: queryKeyIR } = useReadContract({
-    abi: brrrataABI,
-    address: BRRRATA_ADDRESS,
-    functionName: 'isReveal',
-    args: [walletAddress],
-  });
-
   useEffect(() => {
     if (blockNumber === undefined) return;
     queryClient.invalidateQueries({ queryKey: queryKeyLF });
-    queryClient.invalidateQueries({ queryKey: queryKeyIR });
   }, [blockNumber, queryClient, walletAddress]);
 
   if (!walletAddress || chainId != ACTIVE_CHAIN_ID) {
     return <></>;
-  } else if ((!lastFormId || lastFormId === 0) && !isReveal) {
-    console.log('Is reveal', isReveal, walletAddress);
-    return <div>You don't have any brrrata staked</div>;
-  } else {
-    if (!lastFormId || lastFormId === 0) return <Reveal />;
+  } else if (revealExist) {
+    return (
+      <Reveal
+        setRevealExist={setRevealExist}
+        canReveal={canReveal}
+        amount={amount}
+        spin={spin}
+      />
+    );
+  } else if (lastFormId && lastFormId != 0) {
     return (
       <>
-        <Reveal />
         {Array.from({ length: toNumber(lastFormId as any) }, (_, i) => i).map(
           (id) => (
             <div>
@@ -57,5 +75,7 @@ export default function Unstake() {
         )}
       </>
     );
+  } else {
+    return <div>You don't have any brrrata staked</div>;
   }
 }
