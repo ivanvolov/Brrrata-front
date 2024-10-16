@@ -17,6 +17,11 @@ export const format = (value: BigNumber): string => {
   return formatUnits(value.toBigInt(), 18);
 };
 
-export const parse = (value: string): BigNumber => {
-  return BigNumber.from(parseUnits(value, 18));
+export const trueParse = (value: string): BigNumber => {
+  try {
+    return BigNumber.from(parseUnits(value, 18));
+  } catch (err) {
+    console.log(err);
+    return BigNumber.from(0);
+  }
 };

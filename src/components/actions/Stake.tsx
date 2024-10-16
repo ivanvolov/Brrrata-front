@@ -12,8 +12,8 @@ import fonduePitABI from '../../web3/abi/FonduePit.json';
 import brrrataABI from '../../web3/abi/Brrrata.json';
 import { BRRRATA_ADDRESS, FONDUEPIT_ADDRESS, UINT_256_MAX } from '../../web3';
 
-import { toBN, format, parse, toNumber } from '../../shared/token';
-import { tokenAmountInputRestriction } from '../../shared/inputRestrictions';
+import { toBN, format, trueParse, toNumber } from '../../shared/token';
+import { amountStringInputRestriction } from '../../shared/inputRestrictions';
 import { getStakeButtonLogic } from './stakeButtonLogic';
 
 import { BigNumber } from '@ethersproject/bignumber';
@@ -109,6 +109,7 @@ export default function Stake() {
 
   const [amountPercent, setAmountPercent] = useState(0);
   const [amount, setAmount] = useState(BigNumber.from(0));
+  const [amountString, setAmountString] = useState('');
   const [periodId, setPeriodId] = useState(2);
 
   const updateAmountPercent = (event: any) => {
@@ -118,12 +119,15 @@ export default function Stake() {
       .mul(toBN(_amountPercent, 18))
       .div(toBN(100, 18));
     setAmount(_amount);
+    setAmountString(format(_amount));
   };
 
   const updateAmountInput = (event: any) => {
     let _amountString = event.target.value;
-    _amountString = tokenAmountInputRestriction(_amountString);
-    let _amount = parse(_amountString);
+    _amountString = amountStringInputRestriction(_amountString);
+    setAmountString(_amountString);
+
+    let _amount = trueParse(_amountString);
     setAmount(_amount);
     const _amountPercent = _amount.mul(toBN(100, 18)).div(toBN(balanceBRRR));
     setAmountPercent(Number(format(_amountPercent)));
@@ -136,6 +140,7 @@ export default function Stake() {
   const setAmountMax = () => {
     setAmountPercent(100);
     setAmount(toBN(balanceBRRR));
+    setAmountString(format(toBN(balanceBRRR)));
   };
 
   const [buttonText, handleClick, disabled]: any = getStakeButtonLogic({
@@ -160,7 +165,7 @@ export default function Stake() {
           placeholder="0"
           autoComplete="off"
           onChange={(e) => updateAmountInput(e)}
-          value={format(amount)}
+          value={amountString}
           disabled={disabled}
           className="w-full rounded border p-2 pr-16 text-right [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
         />

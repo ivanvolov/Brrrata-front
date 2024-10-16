@@ -12,8 +12,8 @@ import brrrataABI from '../../web3/abi/Brrrata.json';
 import wcheeseABI from '../../web3/abi/WCHEESE.json';
 import { BRRRATA_ADDRESS, WCHEESE_ADDRESS, UINT_256_MAX } from '../../web3';
 
-import { toBN, format, parse } from '../../shared/token';
-import { tokenAmountInputRestriction } from '../../shared/inputRestrictions';
+import { toBN, format, trueParse } from '../../shared/token';
+import { amountStringInputRestriction } from '../../shared/inputRestrictions';
 import { getRevealState } from '../../shared/server';
 import { getMintButtonLogic } from '../actions/mintButtonLogic';
 
@@ -124,6 +124,7 @@ const Mint: React.FC<MintProps> = ({ revealTabTransfer }) => {
 
   const [amountPercent, setAmountPercent] = useState(0);
   const [amount, setAmount] = useState(BigNumber.from(0));
+  const [amountString, setAmountString] = useState('');
 
   const updateAmountPercent = (event: any) => {
     let _amountPercent = event.target.value;
@@ -131,12 +132,15 @@ const Mint: React.FC<MintProps> = ({ revealTabTransfer }) => {
     const _amount = balanceWC.mul(toBN(_amountPercent, 18)).div(toBN(100, 18));
 
     setAmount(_amount);
+    setAmountString(format(_amount));
   };
 
   const updateAmountInput = (event: any) => {
     let _amountString = event.target.value;
-    _amountString = tokenAmountInputRestriction(_amountString);
-    let _amount = parse(_amountString);
+    _amountString = amountStringInputRestriction(_amountString);
+    setAmountString(_amountString);
+
+    let _amount = trueParse(_amountString);
     setAmount(_amount);
 
     const _amountPercent = _amount.mul(toBN(100, 18)).div(balanceWC);
@@ -146,6 +150,7 @@ const Mint: React.FC<MintProps> = ({ revealTabTransfer }) => {
   const setAmountMax = () => {
     setAmountPercent(100);
     setAmount(balanceWC);
+    setAmountString(format(balanceWC));
   };
 
   const [buttonText, handleClick, disabled]: any = getMintButtonLogic({
@@ -169,10 +174,10 @@ const Mint: React.FC<MintProps> = ({ revealTabTransfer }) => {
         <input
           className="w-full rounded border p-2 pr-16 text-right [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
           type="string"
-          placeholder="0.0"
+          placeholder="0"
           autoComplete="off"
           onChange={(e) => updateAmountInput(e)}
-          value={format(amount)}
+          value={amountString}
           disabled={disabled}
         />
         <button
