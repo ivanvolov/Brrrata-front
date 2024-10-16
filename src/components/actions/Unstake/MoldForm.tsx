@@ -68,13 +68,16 @@ const MoldForm: React.FC<MoldFormProps> = ({ id }) => {
 
   const periodId = toNumber(formData[1]);
 
-  const start = moment(toNumber(formData[2]));
-  console.log(start.format());
-  const end = moment(toNumber(formData[2]) + periodMapping[periodId]);
-  console.log(end.format());
-  const timeDiff = end.from(start);
+  // ---- Time stuff
 
-  // console.log('>timeDiff:', timeDiff);
+  const now = moment();
+  const start = moment(toNumber(formData[2]) * 1000);
+  const end = moment((toNumber(formData[2]) + periodMapping[periodId]) * 1000);
+  // console.log(start.format());
+  // console.log(end.format());
+
+  const endDiff = end.isAfter(now) ? end.fromNow() : 'Expired';
+  const startDiff = start.fromNow(); // e.g., "5 days ago"
 
   return (
     <div className="max-w-xs rounded-xl bg-white p-1 shadow-1xl">
@@ -92,11 +95,11 @@ const MoldForm: React.FC<MoldFormProps> = ({ id }) => {
           </div>
           <div>
             <span className="text-gray-600">Staked:</span>
-            <span className="ml-1 font-medium">{timeDiff}</span>
+            <span className="ml-1 font-medium">{startDiff}</span>
           </div>
           <div>
             <span className="text-gray-600">Remaining:</span>
-            <span className="ml-1 font-medium">{timeDiff}</span>
+            <span className="ml-1 font-medium">{endDiff}</span>
           </div>
         </div>
         <button
