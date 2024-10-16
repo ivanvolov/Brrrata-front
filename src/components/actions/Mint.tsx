@@ -77,12 +77,19 @@ const Mint: React.FC<MintProps> = ({ revealTabTransfer }) => {
   };
 
   const handleTransactionMint = async () => {
-    console.log('>> mintBrrrata', format(amount));
     writeContract({
       abi: brrrataABI,
       address: BRRRATA_ADDRESS,
       functionName: 'giveMeBrrrata',
       args: [amount, walletAddress],
+      // onSettled: (data: any) => {
+      //   if (data) {
+      //     console.log
+      //   }
+      // },
+      // onError: error => {
+      //        notifyError({ message: error?.data?.message ?? error?.message })
+      // },
     });
   };
 
@@ -104,11 +111,9 @@ const Mint: React.FC<MintProps> = ({ revealTabTransfer }) => {
 
   const updateAmountPercent = (event: any) => {
     let _amountPercent = event.target.value;
-    // console.log('>> updateAmountPercent', _amountPercent);
     setAmountPercent(_amountPercent);
     const _amount = balanceWC.mul(toBN(_amountPercent, 18)).div(toBN(100, 18));
 
-    // console.log('>> updateAmount', format(_amount));
     setAmount(_amount);
   };
 
@@ -117,11 +122,9 @@ const Mint: React.FC<MintProps> = ({ revealTabTransfer }) => {
     _amountString = tokenAmountInputRestriction(_amountString);
     let _amount = parse(_amountString);
     setAmount(_amount);
-    // console.log('>> updateAmount', format(_amount));
 
     const _amountPercent = _amount.mul(toBN(100, 18)).div(balanceWC);
     setAmountPercent(Number(format(_amountPercent)));
-    // console.log('>> updateAmountPercent', _amountPercent);
   };
 
   const setAmountMax = () => {

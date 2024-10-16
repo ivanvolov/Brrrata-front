@@ -61,8 +61,6 @@ const MoldForm: React.FC<MoldFormProps> = ({ id }) => {
   };
   if (isLoadingInterest || isLoadingFD || !blockData) return <></>;
 
-  console.log('> formData', formData);
-
   const amount = toBN(formData[0]);
   const PnL = toBN(interest).div(amount).mul(toBN(100, 18));
 
@@ -73,8 +71,6 @@ const MoldForm: React.FC<MoldFormProps> = ({ id }) => {
   const now = moment();
   const start = moment(toNumber(formData[2]) * 1000);
   const end = moment((toNumber(formData[2]) + periodMapping[periodId]) * 1000);
-  // console.log(start.format());
-  // console.log(end.format());
 
   const endDiff = end.isAfter(now) ? end.fromNow() : 'Expired';
   const startDiff = start.fromNow(); // e.g., "5 days ago"

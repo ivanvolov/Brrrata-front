@@ -27,5 +27,3 @@ export const config = getDefaultConfig({
   ssr: false,
   storage: storage,
 });
-
-console.log(config);

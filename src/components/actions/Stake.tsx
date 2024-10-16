@@ -54,7 +54,6 @@ export default function Stake() {
   // Notice: MOCK for testing TODO: remove in production
   // balanceBRRR = toBN(1, 18);
   // allowanceBRRR = toBN(5, 17);
-  // console.log('>isLoading', isLoading);
 
   // ---- Modify contract
 
@@ -77,7 +76,6 @@ export default function Stake() {
   };
 
   const handleTransactionStake = () => {
-    console.log('>> lockBrrrata', format(amount), periodId);
     writeContract({
       abi: fonduePitABI,
       address: FONDUEPIT_ADDRESS,

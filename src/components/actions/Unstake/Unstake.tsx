@@ -26,7 +26,6 @@ export default function Unstake() {
     if (blockNumber === undefined) return;
     const update = async () => {
       const result = await getRevealState(walletAddress);
-      console.log('> result', result);
       if (result.reveal) {
         setRevealExist(1);
         setCanReveal(result.reveal.canReveal);

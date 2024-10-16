@@ -49,7 +49,6 @@ export default function Burn() {
   const { writeContract } = useWriteContract();
 
   const handleTransactionBurn = () => {
-    console.log('>> burn', amount);
     writeContract({
       abi: brrrataABI,
       address: BRRRATA_ADDRESS,

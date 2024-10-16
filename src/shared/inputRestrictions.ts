@@ -20,27 +20,3 @@ export const tokenAmountInputRestriction = (value: string) => {
 
   return newValue;
 };
-
-// export const slippageValidator = (value: string) => {
-//   // console.log(value)
-
-//   // Only numbers
-//   let newValue = value.toString().replace(/[^0-9.]/gi, '');
-
-//   // Only one dot
-//   let output = newValue.split('.');
-//   if (output.length > 2) {
-//     newValue = output.shift() + '.' + output.join('');
-//   }
-
-//   return newValue;
-// };
-
-// export const gweiValidator = (value: string) => {
-//   // console.log(value)
-
-//   // Only numbers
-//   let newValue = value.toString().replace(/[^0-9]/gi, '');
-
-//   return newValue;
-// };
