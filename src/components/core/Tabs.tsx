@@ -32,7 +32,7 @@ export default function Tabs() {
       case 'mint':
         return (
           <div className="p-6">
-            <Mint />
+            <Mint revealTabTransfer={() => _setActiveTab('unstake')} />
           </div>
         );
       case 'burn':

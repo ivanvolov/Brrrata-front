@@ -16,7 +16,7 @@ export default function Unstake() {
   const { data: blockNumber } = useBlockNumber({ watch: true });
   const { address: walletAddress, chainId: chainId } = useAccount();
 
-  const [revealExist, setRevealExist] = useState(false);
+  const [revealExist, setRevealExist] = useState(-1);
 
   const [canReveal, setCanReveal] = useState(false);
   const [amount, setAmount] = useState(BigNumber.from(0));
@@ -28,12 +28,12 @@ export default function Unstake() {
       const result = await getRevealState(walletAddress);
       console.log('> result', result);
       if (result.reveal) {
-        setRevealExist(true);
+        setRevealExist(1);
         setCanReveal(result.reveal.canReveal);
         setAmount(toBN(String(result.reveal.amount)));
         setSpin(result.reveal.spin - 1);
       } else {
-        setRevealExist(false);
+        setRevealExist(0);
         setCanReveal(false);
       }
     };
@@ -52,7 +52,7 @@ export default function Unstake() {
     queryClient.invalidateQueries({ queryKey: queryKeyLF });
   }, [blockNumber, queryClient, walletAddress]);
 
-  if (!walletAddress || chainId != ACTIVE_CHAIN_ID) {
+  if (!walletAddress || chainId != ACTIVE_CHAIN_ID || revealExist == -1) {
     return <></>;
   } else if (revealExist) {
     return (
@@ -66,13 +66,13 @@ export default function Unstake() {
   } else if (lastFormId && lastFormId != 0) {
     return (
       <>
-        {Array.from({ length: toNumber(lastFormId as any) }, (_, i) => i).map(
-          (id) => (
+        {Array.from({ length: toNumber(lastFormId as any) }, (_, i) => i)
+          .reverse()
+          .map((id) => (
             <div>
               <MoldForm key={id} id={id} />
             </div>
-          ),
-        )}
+          ))}
       </>
     );
   } else {

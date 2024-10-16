@@ -14,11 +14,16 @@ import { BRRRATA_ADDRESS, WCHEESE_ADDRESS, UINT_256_MAX } from '../../web3';
 
 import { toBN, format, parse } from '../../shared/token';
 import { tokenAmountInputRestriction } from '../../shared/inputRestrictions';
+import { getRevealState } from '../../shared/server';
 import { getMintButtonLogic } from '../actions/mintButtonLogic';
 
 import { BigNumber } from '@ethersproject/bignumber';
 
-export default function Mint() {
+interface MintProps {
+  revealTabTransfer: any;
+}
+
+const Mint: React.FC<MintProps> = ({ revealTabTransfer }) => {
   const queryClient = useQueryClient();
 
   const { data: blockNumber } = useBlockNumber({ watch: true });
@@ -83,6 +88,17 @@ export default function Mint() {
 
   // ---- Just react stuff
 
+  const [revealExist, setRevealExist] = useState(false);
+  useEffect(() => {
+    if (blockNumber === undefined) return;
+    const update = async () => {
+      const result = await getRevealState(walletAddress);
+      if (result.reveal) setRevealExist(true);
+      else setRevealExist(false);
+    };
+    update();
+  }, [blockNumber, walletAddress]);
+
   const [amountPercent, setAmountPercent] = useState(0);
   const [amount, setAmount] = useState(BigNumber.from(0));
 
@@ -124,6 +140,8 @@ export default function Mint() {
     handleTransactionMint: handleTransactionMint,
     openConnectModal: openConnectModal,
     openChainModal: openChainModal,
+    revealExist: revealExist,
+    revealTabTransfer: revealTabTransfer,
   });
   return (
     <>
@@ -171,4 +189,6 @@ export default function Mint() {
       </button>
     </>
   );
-}
+};
+
+export default Mint;
