@@ -86,6 +86,8 @@ const MoldForm: React.FC<MoldFormProps> = ({ id }) => {
 
   const amount = toBN(formData[0]);
   const PnL = toBN(interest).div(amount).mul(toBN(100, 18));
+  console.log('> amount', amount.toString());
+  console.log('> interest', toBN(interest).toString());
 
   const periodId = toNumber(formData[1]);
 
@@ -96,7 +98,7 @@ const MoldForm: React.FC<MoldFormProps> = ({ id }) => {
   const end = moment((toNumber(formData[2]) + periodMapping[periodId]) * 1000);
 
   const endDiff = end.isAfter(now) ? end.fromNow() : 'Expired';
-  const startDiff = start.fromNow(); // e.g., "5 days ago"
+  const startDiff = start.fromNow();
 
   return (
     <div className="max-w-xs rounded-xl bg-white p-1 shadow-1xl">
@@ -121,12 +123,16 @@ const MoldForm: React.FC<MoldFormProps> = ({ id }) => {
             <span className="ml-1 font-medium">{endDiff}</span>
           </div>
         </div>
-        <button
-          className="w-full rounded-lg bg-purple-500 py-2 font-medium text-white transition-colors hover:bg-purple-600"
-          onClick={() => unlock(id)}
-        >
-          Unstake
-        </button>
+        {!end.isAfter(now) ? (
+          <button
+            className="w-full rounded-lg bg-purple-500 py-2 font-medium text-white transition-colors hover:bg-purple-600"
+            onClick={() => unlock(id)}
+          >
+            Unstake
+          </button>
+        ) : (
+          <></>
+        )}
       </div>
     </div>
   );
