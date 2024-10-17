@@ -1,9 +1,6 @@
-// import { BigNumberish } from 'ethers';
-// import { formatUnits, parseUnits } from 'ethers/utils';
+export const BRRRATA_ADDRESS = '0x0432Bc838437857eB014B77F366Ce8B468772bE9';
 
-export const BRRRATA_ADDRESS = '0xcCC614A516052E2538BAe1ACd4cB559C85468e9B';
-
-export const FONDUEPIT_ADDRESS = '0x2138DB3FBd18a7D7F6D73Cbbd798577CF9Bdca06';
+export const FONDUEPIT_ADDRESS = '0x6947EBC6D895297919081a0c534bBF6034C5461b';
 
 export const WCHEESE_ADDRESS = '0x6537507cE0d262AE9d7af0fE83A91b019B98397A';
 

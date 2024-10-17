@@ -27,7 +27,7 @@ const performanceData = [
   },
 ];
 
-const CustomTooltip = ({ active, payload, label }) => {
+const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
     return (
       <div
@@ -43,7 +43,7 @@ const CustomTooltip = ({ active, payload, label }) => {
         }}
       >
         <p style={{ color: '#fff', marginBottom: '5px' }}>{`${label}`}</p>
-        {payload.map((entry, index) => (
+        {payload.map((entry: any, index: any) => (
           <p key={index} style={{ color: entry.color, margin: '2px 0' }}>
             {`${entry.name}: ${entry.value}%`}
           </p>
