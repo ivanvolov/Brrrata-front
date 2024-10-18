@@ -10,7 +10,12 @@ import { useConnectModal, useChainModal } from '@rainbow-me/rainbowkit';
 import { useQueryClient } from '@tanstack/react-query';
 import fonduePitABI from '../../web3/abi/FonduePit.json';
 import brrrataABI from '../../web3/abi/Brrrata.json';
-import { BRRRATA_ADDRESS, FONDUEPIT_ADDRESS, UINT_256_MAX } from '../../web3';
+import {
+  BRRRATA_ADDRESS,
+  FONDUEPIT_ADDRESS,
+  periodMapping,
+  UINT_256_MAX,
+} from '../../web3';
 
 import {
   toBN,
@@ -210,9 +215,11 @@ export default function Stake() {
           value={periodId}
           onChange={handleChange}
         >
-          <option value="0">1 day - 4% APY</option>
-          <option value="1">3 days - 10% APY</option>
-          <option value="2">7 days - 15% APY</option>
+          {Object.keys(periodMapping).map((key) => (
+            <option key={key} value={key}>
+              {periodMapping[key].label} APY
+            </option>
+          ))}
         </select>
       </div>
       <button

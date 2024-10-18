@@ -95,7 +95,9 @@ const MoldForm: React.FC<MoldFormProps> = ({ id }) => {
 
   const now = moment();
   const start = moment(toNumber(formData[2]) * 1000);
-  const end = moment((toNumber(formData[2]) + periodMapping[periodId]) * 1000);
+  const end = moment(
+    (toNumber(formData[2]) + periodMapping[periodId].period) * 1000,
+  );
 
   const endDiff = end.isAfter(now) ? end.fromNow() : 'Expired';
   const startDiff = start.fromNow();
