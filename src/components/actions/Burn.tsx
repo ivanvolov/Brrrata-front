@@ -11,7 +11,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import brrrataABI from '../../web3/abi/Brrrata.json';
 import { BRRRATA_ADDRESS } from '../../web3';
 
-import { toBN, format, trueParse } from '../../shared/token';
+import { toBN, format, trueParse, formatShort } from '../../shared/token';
 import { amountStringInputRestriction } from '../../shared/inputRestrictions';
 import { getBurnButtonLogic } from './burnButtonLogic';
 
@@ -87,9 +87,12 @@ export default function Burn() {
   const updateAmountPercent = (event: any) => {
     let _amountPercent = event.target.value;
     setAmountPercent(_amountPercent);
-    const _amount = toBN(balanceBRRR)
+    let _amount = toBN(balanceBRRR)
       .mul(toBN(_amountPercent, 18))
       .div(toBN(100, 18));
+
+    _amount = trueParse(formatShort(_amount)); //shorten Amount
+
     setAmount(_amount);
     setAmountString(format(_amount));
   };
@@ -147,7 +150,7 @@ export default function Burn() {
         <div className="flex items-center justify-between">
           <label className="text-gray-700">0</label>
           <span className="text-gray-700" id="rangeValue">
-            Balance: {isLoadingBBRRR ? '...' : format(balanceBRRR)} BRRR
+            Balance: {isLoadingBBRRR ? '...' : formatShort(balanceBRRR)} BRRR
           </span>
         </div>
         <input

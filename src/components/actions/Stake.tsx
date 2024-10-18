@@ -12,7 +12,13 @@ import fonduePitABI from '../../web3/abi/FonduePit.json';
 import brrrataABI from '../../web3/abi/Brrrata.json';
 import { BRRRATA_ADDRESS, FONDUEPIT_ADDRESS, UINT_256_MAX } from '../../web3';
 
-import { toBN, format, trueParse, toNumber } from '../../shared/token';
+import {
+  toBN,
+  format,
+  trueParse,
+  toNumber,
+  formatShort,
+} from '../../shared/token';
 import { amountStringInputRestriction } from '../../shared/inputRestrictions';
 import { getStakeButtonLogic } from './stakeButtonLogic';
 
@@ -115,9 +121,12 @@ export default function Stake() {
   const updateAmountPercent = (event: any) => {
     let _amountPercent = event.target.value;
     setAmountPercent(_amountPercent);
-    const _amount = toBN(balanceBRRR)
+    let _amount = toBN(balanceBRRR)
       .mul(toBN(_amountPercent, 18))
       .div(toBN(100, 18));
+
+    _amount = trueParse(formatShort(_amount)); //shorten Amount
+
     setAmount(_amount);
     setAmountString(format(_amount));
   };
@@ -181,7 +190,7 @@ export default function Stake() {
         <div className="flex items-center justify-between">
           <label className="text-gray-700">0</label>
           <span className="text-gray-700" id="rangeValue">
-            Balance: {isLoadingBBRRR ? '...' : format(balanceBRRR as any)}
+            Balance: {isLoadingBBRRR ? '...' : formatShort(balanceBRRR as any)}
           </span>
         </div>
         <input

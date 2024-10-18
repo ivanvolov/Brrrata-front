@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
 
 import { LuckyWheel } from './LuckyWheel';
-import { format } from '../../../shared/token';
+import { formatShort } from '../../../shared/token';
 
 interface RevealProps {
   setRevealExist: any;
@@ -29,7 +29,9 @@ const Reveal: React.FC<RevealProps> = ({
         <div className="mb-3 grid grid-cols-1 gap-4 text-sm">
           <div>
             <span className="text-gray-600">Amount:</span>
-            <span className="ml-1 font-medium">{format(amount)} BRRATA</span>
+            <span className="ml-1 font-medium">
+              {formatShort(amount)} BRRATA
+            </span>
           </div>
         </div>
         <button

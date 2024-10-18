@@ -12,7 +12,7 @@ import brrrataABI from '../../web3/abi/Brrrata.json';
 import wcheeseABI from '../../web3/abi/WCHEESE.json';
 import { BRRRATA_ADDRESS, WCHEESE_ADDRESS, UINT_256_MAX } from '../../web3';
 
-import { toBN, format, trueParse } from '../../shared/token';
+import { toBN, format, trueParse, formatShort } from '../../shared/token';
 import { amountStringInputRestriction } from '../../shared/inputRestrictions';
 import { getRevealState } from '../../shared/server';
 import { getMintButtonLogic } from '../actions/mintButtonLogic';
@@ -129,7 +129,9 @@ const Mint: React.FC<MintProps> = ({ revealTabTransfer }) => {
   const updateAmountPercent = (event: any) => {
     let _amountPercent = event.target.value;
     setAmountPercent(_amountPercent);
-    const _amount = balanceWC.mul(toBN(_amountPercent, 18)).div(toBN(100, 18));
+    let _amount = balanceWC.mul(toBN(_amountPercent, 18)).div(toBN(100, 18));
+
+    _amount = trueParse(formatShort(_amount)); //shorten Amount
 
     setAmount(_amount);
     setAmountString(format(_amount));
@@ -192,7 +194,7 @@ const Mint: React.FC<MintProps> = ({ revealTabTransfer }) => {
         <div className="flex items-center justify-between">
           <label className="text-gray-700">0</label>
           <span className="text-gray-700" id="rangeValue">
-            Balance: {isLoadingBWC ? '...' : format(balanceWC)}
+            Balance: {isLoadingBWC ? '...' : formatShort(balanceWC)}
           </span>
         </div>
         <input

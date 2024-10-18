@@ -17,6 +17,29 @@ export const format = (value: BigNumber): string => {
   return formatUnits(value.toBigInt(), 18);
 };
 
+export const formatShort = (value: BigNumber): string => {
+  let strValue = formatUnits(value.toBigInt(), 18);
+  let decimalPlaces = 6;
+  const decimalsToZeroOut = 4;
+  let splitNum = strValue.split('.');
+
+  if (String(splitNum[0]).length > decimalsToZeroOut) {
+    strValue = splitNum[0];
+  } else if (splitNum[1]) {
+    let _strValue = strValue;
+    do {
+      splitNum = _strValue.split('.');
+      if (splitNum[1].length > decimalPlaces) {
+        splitNum[1] = splitNum[1].substring(0, decimalPlaces);
+      }
+      decimalPlaces++;
+    } while (splitNum[1] == '0'.repeat(decimalPlaces - 1));
+
+    strValue = splitNum.join('.');
+  }
+  return strValue;
+};
+
 export const trueParse = (value: string): BigNumber => {
   try {
     return BigNumber.from(parseUnits(value, 18));
