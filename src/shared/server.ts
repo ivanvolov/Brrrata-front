@@ -26,3 +26,12 @@ export const getRevealState = async (walletAddress: any): Promise<any> => {
     console.error('There was an error!', error);
   }
 };
+
+export const getPrices = async (): Promise<any> => {
+  try {
+    const response = await axios.post(`${url}/prices`, {});
+    return response.data;
+  } catch (error) {
+    console.error('There was an error!', error);
+  }
+};

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   AreaChart,
   Area,
@@ -8,8 +8,10 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from 'recharts';
+import { useBlockNumber } from 'wagmi';
+import { getPrices } from '../../shared/server';
 
-const performanceData = [
+const defaultPerformanceData = [
   {
     date: 'Oct 05',
     pureETH: 0,
@@ -55,6 +57,38 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 };
 
 export default function PriceChart() {
+  const [performanceData, setPerformanceData] = useState(
+    defaultPerformanceData,
+  );
+  const { data: blockNumber } = useBlockNumber({ watch: true });
+  useEffect(() => {
+    const getAndUpdateData = async () => {
+      const result = await getPrices();
+      console.log(result);
+      // dateString
+      // price
+      const prices = [
+        {
+          date: 'Oct 16',
+          pureETH: 0,
+          Based: 0,
+        },
+        {
+          date: 'Oct 17',
+          pureETH: 1,
+          Based: 1.1,
+        },
+        {
+          date: 'Oct 18',
+          pureETH: 1,
+          Based: 1.4,
+        },
+      ];
+      setPerformanceData(prices);
+    };
+    getAndUpdateData();
+  }, [blockNumber]);
+
   return (
     <div
       style={{
