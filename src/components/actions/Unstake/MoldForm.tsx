@@ -103,7 +103,7 @@ const MoldForm: React.FC<MoldFormProps> = ({ id }) => {
   return (
     <div className="max-w-xs rounded-xl bg-white p-1 shadow-1xl">
       <div className="rounded-lg border p-4 transition-colors hover:bg-gray-50">
-        <div className="mb-3 grid grid-cols-1 gap-4 text-sm">
+        <div className="grid grid-cols-1 gap-4 text-sm">
           <div>
             <span className="text-gray-600">Amount:</span>
             <span className="ml-1 font-medium">{format(amount)} BRRATA</span>
@@ -115,11 +115,7 @@ const MoldForm: React.FC<MoldFormProps> = ({ id }) => {
             </span>
           </div>
           <div>
-            <span className="text-gray-600">Staked:</span>
-            <span className="ml-1 font-medium">{startDiff}</span>
-          </div>
-          <div>
-            <span className="text-gray-600">Remaining:</span>
+            <span className="text-gray-600">Expiration:</span>
             <span className="ml-1 font-medium">{endDiff}</span>
           </div>
         </div>

@@ -1,7 +1,16 @@
 import React, { useState } from 'react';
 
-import { Wheel } from 'react-custom-roulette';
+import RoulettePro from 'react-roulette-pro';
+import 'react-roulette-pro/dist/index.css';
 import { sendRevealRequest } from '../../../shared/server';
+
+import normal_burrata from '../../files/normal_burrata.gif';
+import double_cheese from '../../files/double_cheese.gif';
+import moldy_cheese from '../../files/moldy_cheese.gif'
+import printer from '../../files/printer.gif';
+import ramsay from '../../files/ramsay.gif';
+import melt1 from '../../files/melt1.gif'
+import melt2 from '../../files/melt2.gif'
 
 interface ModalProps {
   showModal: boolean;
@@ -11,18 +20,59 @@ interface ModalProps {
   spin: number;
 }
 
-// https://www.npmjs.com/package/react-custom-roulette
-const data = [
+const prizes = [
   {
-    option: 'Normal Cheese',
-    style: { backgroundColor: 'green', textColor: 'black' },
+    "id": "a44c728d-8a0e-48ca-a963-3d5ce6dd41b0--6rz6dlF6jAbds_o1VaJK1",
+    "image": normal_burrata,
+    "text": "Normal Cheese"
   },
-  { option: 'Double Cheese', style: { backgroundColor: 'white' } },
-  { option: 'Moldy Cheese' },
-  { option: 'Meltdown 1' },
-  { option: 'Meltdown 2' },
-  { option: 'Rare Cheese NFTs' },
+  {
+    "id": "7d24b681-82d9-4fc0-b034-c82f9db11a59--7pC6zdUjAraEEGjztgMHp",
+    "image": double_cheese,
+    "text": "Double Cheese"
+  },
+  {
+    "id": "9da9a287-952f-41bd-8c7a-b488938d7c7a--hrMh312F-eLf5_2qLHhSA",
+    "image": moldy_cheese,
+    "text": "Moldy Cheese"
+  },
+  {
+    "id": "04106f3f-f99f-47e4-a62e-3c81fc8cf794--yRPVzjCU8K86jClftIFqf",
+    "image": ramsay,
+    "text": "Ooops, Burnt Cheese"
+  },
+  {
+    "id": "04106f3f-f99f-47e4-a62e-3c81fc8cf794--yRPVzjCU8K86jClftIFqf",
+    "image": melt1,
+    "text": "Cheese Meltdown 1 day"
+  },
+  {
+    "id": "04106f3f-f99f-47e4-a62e-3c81fc8cf794--yRPVzjCU8K86jClftIFqf",
+    "image": melt2,
+    "text": "Cheese Meltdown 7 days"
+  }
 ];
+
+const reproductionArray = (array = [], length = 0) => [
+  ...Array(length)
+    .fill('_')
+    .map(() => array[Math.floor(Math.random() * array.length)]),
+];
+
+const reproducedPrizeList = [
+  ...prizes,
+  ...reproductionArray(prizes, prizes.length * 3),
+  ...prizes,
+  ...reproductionArray(prizes, prizes.length),
+];
+
+const generateId = () =>
+  `${Date.now().toString(36)}-${Math.random().toString(36).substring(2)}`;
+
+const prizeList = reproducedPrizeList.map((prize) => ({
+  ...prize,
+  id: typeof crypto.randomUUID === 'function' ? crypto.randomUUID() : generateId(),
+}));
 
 export const LuckyWheel: React.FC<ModalProps> = ({
   showModal,
@@ -35,6 +85,8 @@ export const LuckyWheel: React.FC<ModalProps> = ({
 
   const [spinnedOnce, setSpinnedOnce] = useState(false);
   const [mustSpin, setMustSpin] = useState(false);
+
+  const prizeIndex = prizes.length * 4 + spin;
 
   const handleSpinClick = async () => {
     if (!mustSpin) {
@@ -63,14 +115,15 @@ export const LuckyWheel: React.FC<ModalProps> = ({
             {/*body*/}
             <div className="relative p-6 flex-auto">
               {/* Modal content can go here */}
-              <Wheel
-                mustStartSpinning={mustSpin}
-                prizeNumber={spin}
-                data={data}
-                onStopSpinning={() => {
+              <RoulettePro
+                prizes={prizeList}
+                prizeIndex={prizeIndex}
+                start={mustSpin}
+                onPrizeDefined={() => {
                   setMustSpin(false);
                   setSpinnedOnce(true);
                 }}
+                defaultDesignOptions={{ prizesWithText: true }}
               />
             </div>
             {/*footer*/}

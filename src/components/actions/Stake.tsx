@@ -201,9 +201,9 @@ export default function Stake() {
           value={periodId}
           onChange={handleChange}
         >
-          <option value="0">1 day - 4% APY</option>
-          <option value="1">3 days - 10% APY</option>
-          <option value="2">7 days - 15% APY</option>
+          <option value="0">1 day - x1</option>
+          <option value="1">3 days - x1.25</option>
+          <option value="2">7 days - x1.5</option>
         </select>
       </div>
       <button
