@@ -44,7 +44,7 @@ const prizes = [
   {
     "id": "04106f3f-f99f-47e4-a62e-3c81fc8cf794--yRPVzjCU8K86jClftIFqf",
     "image": melt1,
-    "text": "Cheese Meltdown 1 day"
+    "text": "Cheese Meltdown 3 days"
   },
   {
     "id": "04106f3f-f99f-47e4-a62e-3c81fc8cf794--yRPVzjCU8K86jClftIFqf",
@@ -124,6 +124,8 @@ export const LuckyWheel: React.FC<ModalProps> = ({
                   setSpinnedOnce(true);
                 }}
                 defaultDesignOptions={{ prizesWithText: true }}
+                options={{ stopInCenter: true, withoutAnimation: true,  }}
+                classes={ {prizeItem: 'flex', wrapper: 'flex'}}
               />
             </div>
             {/*footer*/}
