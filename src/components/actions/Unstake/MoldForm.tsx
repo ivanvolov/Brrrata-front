@@ -4,7 +4,7 @@ import { useReadContract, useAccount, useWriteContract, useBlock } from 'wagmi';
 import { useQueryClient } from '@tanstack/react-query';
 import fonduePitABI from '../../../web3/abi/FonduePit.json';
 import { FONDUEPIT_ADDRESS, periodMapping } from '../../../web3';
-import { toBN, format, toNumber } from '../../../shared/token';
+import { toBN, format, formatShort, toNumber } from '../../../shared/token';
 import { toast } from 'react-toastify';
 
 import moment from 'moment';
@@ -95,7 +95,9 @@ const MoldForm: React.FC<MoldFormProps> = ({ id }) => {
 
   const now = moment();
   const start = moment(toNumber(formData[2]) * 1000);
-  const end = moment((toNumber(formData[2]) + periodMapping[periodId]) * 1000);
+  const end = moment(
+    (toNumber(formData[2]) + periodMapping[periodId].period) * 1000,
+  );
 
   const endDiff = end.isAfter(now) ? end.fromNow() : 'Expired';
   const startDiff = start.fromNow();
@@ -106,7 +108,9 @@ const MoldForm: React.FC<MoldFormProps> = ({ id }) => {
         <div className="grid grid-cols-1 gap-4 text-sm">
           <div>
             <span className="text-gray-600">Amount:</span>
-            <span className="ml-1 font-medium">{format(amount)} BRRATA</span>
+            <span className="ml-1 font-medium">
+              {formatShort(amount)} BRRATA
+            </span>
           </div>
           <div>
             <span className="text-gray-600">Interest:</span>

@@ -9,8 +9,17 @@ export const UINT_256_MAX =
 
 export const ACTIVE_CHAIN_ID = 9209108;
 
-export const periodMapping: { [key: string]: number } = {
-  '0': 86400,
-  '1': 259200,
-  '2': 604800,
+export const periodMapping: { [key: string]: any } = {
+  '0': {
+    label: '1 day - 4%',
+    period: 86400,
+  },
+  '1': {
+    label: '3 days - 10%',
+    period: 259200,
+  },
+  '2': {
+    label: '7 days - 15%',
+    period: 604800,
+  },
 };
