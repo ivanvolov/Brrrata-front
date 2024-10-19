@@ -11,15 +11,15 @@ export const ACTIVE_CHAIN_ID = 9209108;
 
 export const periodMapping: { [key: string]: any } = {
   '0': {
-    label: '1 day - 4%',
+    label: '1 day - x1',
     period: 86400,
   },
   '1': {
-    label: '3 days - 10%',
+    label: '3 days - x1.25',
     period: 259200,
   },
   '2': {
-    label: '7 days - 15%',
+    label: '7 days - x1.5',
     period: 604800,
   },
 };

@@ -215,9 +215,11 @@ export default function Stake() {
           value={periodId}
           onChange={handleChange}
         >
-          <option value="0">1 day - x1</option>
-          <option value="1">3 days - x1.25</option>
-          <option value="2">7 days - x1.5</option>
+          {Object.keys(periodMapping).map((key) => (
+            <option key={key} value={key}>
+              {periodMapping[key].label} APY
+            </option>
+          ))}
         </select>
       </div>
       <button

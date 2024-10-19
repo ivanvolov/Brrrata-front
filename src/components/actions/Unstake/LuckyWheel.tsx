@@ -6,11 +6,10 @@ import { sendRevealRequest } from '../../../shared/server';
 
 import normal_burrata from '../../files/normal_burrata.gif';
 import double_cheese from '../../files/double_cheese.gif';
-import moldy_cheese from '../../files/moldy_cheese.gif'
-import printer from '../../files/printer.gif';
+import moldy_cheese from '../../files/moldy_cheese.gif';
 import ramsay from '../../files/ramsay.gif';
-import melt1 from '../../files/melt1.gif'
-import melt2 from '../../files/melt2.gif'
+import melt1 from '../../files/melt1.gif';
+import melt2 from '../../files/melt2.gif';
 
 interface ModalProps {
   showModal: boolean;
@@ -20,37 +19,37 @@ interface ModalProps {
   spin: number;
 }
 
-const prizes = [
+const prizes: any = [
   {
-    "id": "a44c728d-8a0e-48ca-a963-3d5ce6dd41b0--6rz6dlF6jAbds_o1VaJK1",
-    "image": normal_burrata,
-    "text": "Normal Cheese"
+    id: 'a44c728d-8a0e-48ca-a963-3d5ce6dd41b0--6rz6dlF6jAbds_o1VaJK1',
+    image: normal_burrata,
+    text: 'Normal Cheese',
   },
   {
-    "id": "7d24b681-82d9-4fc0-b034-c82f9db11a59--7pC6zdUjAraEEGjztgMHp",
-    "image": double_cheese,
-    "text": "Double Cheese"
+    id: '7d24b681-82d9-4fc0-b034-c82f9db11a59--7pC6zdUjAraEEGjztgMHp',
+    image: double_cheese,
+    text: 'Double Cheese',
   },
   {
-    "id": "9da9a287-952f-41bd-8c7a-b488938d7c7a--hrMh312F-eLf5_2qLHhSA",
-    "image": moldy_cheese,
-    "text": "Moldy Cheese"
+    id: '9da9a287-952f-41bd-8c7a-b488938d7c7a--hrMh312F-eLf5_2qLHhSA',
+    image: moldy_cheese,
+    text: 'Moldy Cheese',
   },
   {
-    "id": "04106f3f-f99f-47e4-a62e-3c81fc8cf794--yRPVzjCU8K86jClftIFqf",
-    "image": ramsay,
-    "text": "Ooops, Burnt Cheese"
+    id: '04106f3f-f99f-47e4-a62e-3c81fc8cf794--yRPVzjCU8K86jClftIFqf',
+    image: ramsay,
+    text: 'Ooops, Burnt Cheese',
   },
   {
-    "id": "04106f3f-f99f-47e4-a62e-3c81fc8cf794--yRPVzjCU8K86jClftIFqf",
-    "image": melt1,
-    "text": "Cheese Meltdown 3 days"
+    id: '04106f3f-f99f-47e4-a62e-3c81fc8cf794--yRPVzjCU8K86jClftIFqf',
+    image: melt1,
+    text: 'Cheese Meltdown 3 days',
   },
   {
-    "id": "04106f3f-f99f-47e4-a62e-3c81fc8cf794--yRPVzjCU8K86jClftIFqf",
-    "image": melt2,
-    "text": "Cheese Meltdown 7 days"
-  }
+    id: '04106f3f-f99f-47e4-a62e-3c81fc8cf794--yRPVzjCU8K86jClftIFqf',
+    image: melt2,
+    text: 'Cheese Meltdown 7 days',
+  },
 ];
 
 const reproductionArray = (array = [], length = 0) => [
@@ -71,7 +70,10 @@ const generateId = () =>
 
 const prizeList = reproducedPrizeList.map((prize) => ({
   ...prize,
-  id: typeof crypto.randomUUID === 'function' ? crypto.randomUUID() : generateId(),
+  id:
+    typeof crypto.randomUUID === 'function'
+      ? crypto.randomUUID()
+      : generateId(),
 }));
 
 export const LuckyWheel: React.FC<ModalProps> = ({
@@ -124,8 +126,8 @@ export const LuckyWheel: React.FC<ModalProps> = ({
                   setSpinnedOnce(true);
                 }}
                 defaultDesignOptions={{ prizesWithText: true }}
-                options={{ stopInCenter: true, withoutAnimation: true,  }}
-                classes={ {prizeItem: 'flex', wrapper: 'flex'}}
+                options={{ stopInCenter: true, withoutAnimation: true }}
+                classes={{ prizeItem: 'flex', wrapper: 'flex' }}
               />
             </div>
             {/*footer*/}
