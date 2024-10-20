@@ -6,9 +6,10 @@ import PriceChart from '../interfaces/PriceChart';
 import gif1 from '../files/printer.gif';
 import gif2 from '../files/double_cheese.gif';
 import gif3 from '../files/ramsay.gif';
+import gif4 from '../files/pizza.gif';
 import { ToastContainer } from 'react-toastify';
 
-import Test from '../actions/Unstake/test.tsx'
+import Test from '../actions/Unstake/test.tsx';
 
 export default function Page() {
   return (
@@ -35,17 +36,26 @@ export default function Page() {
             Welcome to Brrrata!
           </h2>
           <p className="text-lg leading-relaxed">
-            GM, kings! Welcome to Holland—the land of windmills, cheese, and fields of beautiful flowers. But flowers? Maaaan, forget the tulips. Here, we're cranking out pure, unfiltered chaos. I mean, it's Holland—so why settle for flowers when you could be minting cheese-fueled, hallucinogenic Brrrata tokens? Let's freaking go! Here are the rules, quick and dirty:
+            GM, kings! Welcome to Holland—the land of windmills, cheese, and
+            fields of beautiful flowers. But flowers? Maaaan, forget the tulips.
+            Here, we're cranking out pure, unfiltered chaos. I mean, it's
+            Holland—so why settle for flowers when you could be minting
+            cheese-fueled, hallucinogenic Brrrata tokens? Let's freaking go!
+            Here are the rules, quick and dirty:
           </p>
           <ol className="list-decimal list-inside mt-4 text-lg">
             <li className="mt-4">
               <strong>Mint Brrrata Tokens</strong>
               <ul className="list-disc list-inside mt-2">
                 <li>
-                  <strong>Cheese Printer from Hell:</strong> Hit the button and let the cheese printer brrrr! The more you mint, the crazier it gets. Like, windmill-level crazy.
+                  <strong>Cheese Printer from Hell:</strong> Hit the button and
+                  let the cheese printer brrrr! The more you mint, the crazier
+                  it gets. Like, windmill-level crazy.
                 </li>
                 <li>
-                  <strong>Bonding Curve:</strong> Price goes up as more cheese is printed. Think of it like the flowers—they bloom, they get expensive. Early minting = cheap cheese.
+                  <strong>Bonding Curve:</strong> Price goes up as more cheese
+                  is printed. Think of it like the flowers—they bloom, they get
+                  expensive. Early minting = cheap cheese.
                 </li>
               </ul>
             </li>
@@ -58,14 +68,34 @@ export default function Page() {
             </div>
             <li className="mt-4">
               <strong>Spin the Wheel of Cheese-tiny</strong>
-              <p className="mt-2">Mint some tokens and spin the wheel. What'll it be?</p>
+              <p className="mt-2">
+                Mint some tokens and spin the wheel. What'll it be?
+              </p>
               <ul className="list-disc list-inside mt-2">
-                <li><strong>Normal cheese:</strong> Yeah, it's just cheese—no frills, no thrills.</li>
-                <li><strong>Double your cheese:</strong> Twice the dairy, twice the flex!</li>
-                <li><strong>Normal cheese locked for 1 day:</strong> Sit tight, cheese takes time, buddy.</li>
-                <li><strong>Normal cheese locked for 1 week:</strong> Aged to perfection—hope you like waiting!</li>
-                <li><strong>Moldy cheese:</strong> Yikes, lose 10% of your cheese—better luck next time.</li>
-                <li><strong>Burnt cheese:</strong> Gordon Ramsay just showed up, called you an idiot sandwich, and poof—your cheese is GONE!</li>
+                <li>
+                  <strong>Normal cheese:</strong> Yeah, it's just cheese—no
+                  frills, no thrills.
+                </li>
+                <li>
+                  <strong>Double your cheese:</strong> Twice the dairy, twice
+                  the flex!
+                </li>
+                <li>
+                  <strong>Normal cheese locked for 1 day:</strong> Sit tight,
+                  cheese takes time, buddy.
+                </li>
+                <li>
+                  <strong>Normal cheese locked for 1 week:</strong> Aged to
+                  perfection—hope you like waiting!
+                </li>
+                <li>
+                  <strong>Moldy cheese:</strong> Yikes, lose 10% of your
+                  cheese—better luck next time.
+                </li>
+                <li>
+                  <strong>Burnt cheese:</strong> Gordon Ramsay just showed up,
+                  called you an idiot sandwich, and poof—your cheese is GONE!
+                </li>
               </ul>
             </li>
             <div className="flex flex-row h-full justify-center items-center mt-4">
@@ -88,34 +118,44 @@ export default function Page() {
               <strong>Stake in the Fondue Pit</strong>
               <ul className="list-disc list-inside mt-2">
                 <li>
-                  <strong>Stake for Gooey Rewards:</strong> Toss your Brrrata into the Fondue Pit and let it melt. Earn gooey cheese rewards while others dream of tulips.
+                  <strong>Stake for Gooey Rewards:</strong> Toss your Brrrata
+                  into the Fondue Pit and let it melt. Earn gooey cheese rewards
+                  while others dream of tulips.
                 </li>
                 <li>
-                  <strong>69% APY with 3 Staking Options:</strong> Stake your Brrrata for:
+                  <strong>69% APY with 3 Staking Options:</strong> Stake your
+                  Brrrata for:
                   <ul className="list-disc list-inside mt-2 ml-4">
-                    <li><strong>1 day:</strong> x1 rewards.</li>
-                    <li><strong>3 days:</strong> x1.2 rewards.</li>
-                    <li><strong>7 days:</strong> x1.5 rewards.</li>
+                    <li>
+                      <strong>1 day:</strong> x1 rewards.
+                    </li>
+                    <li>
+                      <strong>3 days:</strong> x1.2 rewards.
+                    </li>
+                    <li>
+                      <strong>7 days:</strong> x1.5 rewards.
+                    </li>
                   </ul>
-                  But beware—once the staking period is over, your cheese stops growing. No interest after that, so time it right or end up with sad, crusty cheese.
+                  But beware—once the staking period is over, your cheese stops
+                  growing. No interest after that, so time it right or end up
+                  with sad, crusty cheese.
                 </li>
               </ul>
             </li>
             <div className="relative w-1/2 pb-[50%] mx-auto py-6 flex items-center justify-center">
-              <iframe
-                src="https://giphy.com/embed/3ov9jGViTnEpcmybbq"
+              <img
+                src={gif4}
                 width="100%"
                 height="100%"
                 className="absolute top-0 left-0 w-full h-full"
-                frameBorder="0"
-                allowFullScreen
-              ></iframe>
+              />
             </div>
           </ol>
           <div className="mt-6 text-center">
             <p className="text-xl font-bold">Ready for a Wild Ride?</p>
             <p>
-              Click the button, start minting, and let’s paint Holland cheese-yellow! 🧀🚀
+              Click the button, start minting, and let’s paint Holland
+              cheese-yellow! 🧀🚀
             </p>
           </div>
         </div>
