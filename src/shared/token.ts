@@ -14,11 +14,12 @@ export function toNumber(value: BigNumberish): number {
 }
 
 export const format = (value: BigNumber): string => {
-  return formatUnits(value.toBigInt(), 18);
+  const formatted = formatUnits(value.toBigInt(), 18);
+  return formatted.endsWith('.0') ? formatted.slice(0, -2) : formatted;
 };
 
 export const formatShort = (value: BigNumber): string => {
-  let strValue = formatUnits(value.toBigInt(), 18);
+  let strValue = format(value);
   let decimalPlaces = 6;
   const decimalsToZeroOut = 4;
   let splitNum = strValue.split('.');
