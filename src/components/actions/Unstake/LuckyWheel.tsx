@@ -76,11 +76,16 @@ export const LuckyWheel: React.FC<ModalProps> = ({
                 />
               ) : (
                 <>
+                <div className="flex flex-col justify-center items-center">
                   <img
                     src={prizeList[prizeIndex].image}
                     alt="Cheese Printer from Hell"
-                    className="absolute top-0 left-0 w-full h-full width=100%"
+                    className="w-full h-full"
                   />
+                  <p className="mt-4 text-xl font-semibold">
+                    {prizeList[prizeIndex].text}
+                  </p>
+                </div>
                 </>
               )}
             </div>
