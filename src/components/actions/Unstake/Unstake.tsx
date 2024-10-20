@@ -26,21 +26,22 @@ export default function Unstake() {
     if (blockNumber === undefined) return;
     const update = async () => {
       const result = await getRevealState(walletAddress);
-      // if (result.reveal) {
-      //   setRevealExist(1);
-      //   setCanReveal(result.reveal.canReveal);
-      //   setAmount(toBN(String(result.reveal.amount)));
-      //   setSpin(result.reveal.spin);
-      // } else {
-      //   setRevealExist(0);
-      //   setCanReveal(false);
-      // }
 
-      // Notice: for rullet testing
-      setRevealExist(1);
-      setCanReveal(true);
-      setAmount(toBN(45, 18));
-      setSpin(5); //Burnt Cheese
+      if (result.reveal) {
+        setRevealExist(1);
+        setCanReveal(result.reveal.canReveal);
+        setAmount(toBN(String(result.reveal.amount)));
+        setSpin(result.reveal.spin);
+      } else {
+        setRevealExist(0);
+        setCanReveal(false);
+      }
+
+      // // Notice: for rullet testing
+      // setRevealExist(1);
+      // setCanReveal(true);
+      // setAmount(toBN(45, 18));
+      // setSpin(5); //Burnt Cheese
     };
     update();
   }, [blockNumber, walletAddress]);
