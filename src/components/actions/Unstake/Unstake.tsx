@@ -30,7 +30,7 @@ export default function Unstake() {
       //   setRevealExist(1);
       //   setCanReveal(result.reveal.canReveal);
       //   setAmount(toBN(String(result.reveal.amount)));
-      //   setSpin(result.reveal.spin - 1);
+      //   setSpin(result.reveal.spin);
       // } else {
       //   setRevealExist(0);
       //   setCanReveal(false);
@@ -40,7 +40,7 @@ export default function Unstake() {
       setRevealExist(1);
       setCanReveal(true);
       setAmount(toBN(45, 18));
-      setSpin(3); //Burnt Cheese
+      setSpin(5); //Burnt Cheese
     };
     update();
   }, [blockNumber, walletAddress]);
