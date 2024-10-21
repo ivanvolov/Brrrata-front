@@ -6,10 +6,8 @@ export const getMintButtonLogic = (options: any) => {
     walletAddress,
     chainId,
     balance,
-    allowance,
     amount,
     isLoading,
-    handleTransactionApprove,
     handleTransactionMint,
     openConnectModal,
     openChainModal,
@@ -20,13 +18,16 @@ export const getMintButtonLogic = (options: any) => {
   let handleClick;
   let buttonText;
   let disabled;
+  let partialRender = false;
 
   if (!walletAddress) {
     disabled = true;
+    partialRender = true;
     buttonText = 'Connect wallet';
     handleClick = openConnectModal;
   } else if (chainId != ACTIVE_CHAIN_ID) {
     disabled = true;
+    partialRender = true;
     handleClick = openChainModal;
     buttonText = 'Unsupported chain';
   } else if (isLoading) {
@@ -45,15 +46,11 @@ export const getMintButtonLogic = (options: any) => {
     disabled = false;
     handleClick = emptyHandle;
     buttonText = 'Not enough 🧀';
-  } else if (amount.gt(toBN(allowance))) {
-    disabled = false;
-    handleClick = handleTransactionApprove;
-    buttonText = 'Approve 🧀';
   } else {
     disabled = false;
     handleClick = handleTransactionMint;
     buttonText = 'Mint Brrrata';
   }
 
-  return [buttonText, handleClick, disabled];
+  return [buttonText, handleClick, disabled, partialRender];
 };

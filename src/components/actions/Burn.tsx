@@ -74,7 +74,7 @@ export default function Burn() {
       abi: brrrataABI,
       address: BRRRATA_ADDRESS,
       functionName: 'burn',
-      args: [amount],
+      args: [amount, walletAddress],
     });
   };
 

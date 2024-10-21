@@ -5,6 +5,10 @@
     "stateMutability": "nonpayable"
   },
   {
+    "type": "receive",
+    "stateMutability": "payable"
+  },
+  {
     "type": "function",
     "name": "C",
     "inputs": [],
@@ -176,6 +180,11 @@
         "name": "amountOut",
         "type": "uint256",
         "internalType": "uint256"
+      },
+      {
+        "name": "to",
+        "type": "address",
+        "internalType": "address payable"
       }
     ],
     "outputs": [],
@@ -263,18 +272,13 @@
     "name": "giveMeBrrrata",
     "inputs": [
       {
-        "name": "amount",
-        "type": "uint256",
-        "internalType": "uint256"
-      },
-      {
         "name": "to",
         "type": "address",
         "internalType": "address"
       }
     ],
     "outputs": [],
-    "stateMutability": "nonpayable"
+    "stateMutability": "payable"
   },
   {
     "type": "function",
@@ -291,7 +295,7 @@
   },
   {
     "type": "function",
-    "name": "canReveal",
+    "name": "isReveal",
     "inputs": [
       {
         "name": "to",
@@ -332,18 +336,13 @@
     "name": "mint",
     "inputs": [
       {
-        "name": "amount",
-        "type": "uint256",
-        "internalType": "uint256"
-      },
-      {
         "name": "to",
         "type": "address",
         "internalType": "address"
       }
     ],
     "outputs": [],
-    "stateMutability": "nonpayable"
+    "stateMutability": "payable"
   },
   {
     "type": "function",
@@ -702,6 +701,12 @@
         "type": "address",
         "indexed": true,
         "internalType": "address"
+      },
+      {
+        "name": "amount",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
       }
     ],
     "anonymous": false
@@ -730,10 +735,16 @@
     "name": "StateChanged",
     "inputs": [
       {
-        "name": "delta",
-        "type": "int256",
+        "name": "totalSupply",
+        "type": "uint256",
         "indexed": true,
-        "internalType": "int256"
+        "internalType": "uint256"
+      },
+      {
+        "name": "reserve",
+        "type": "uint256",
+        "indexed": true,
+        "internalType": "uint256"
       }
     ],
     "anonymous": false
