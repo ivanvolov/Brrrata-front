@@ -52,14 +52,18 @@ export default function Page() {
         <div className="w-full max-w-6xl flex flex-col md:flex-row items-start gap-6">
           {/* Large Chart Component */}
           <div className="w-full md:w-3/4 bg-white p-8 rounded-lg shadow-lg">
-            <h2 className="text-3xl font-bold text-start mb-6">
-              Brrrata/Cheese Price{' '}
-              {performanceData
-                ? (
-                    1 / performanceData[performanceData.length - 1].Based
-                  ).toFixed(10)
-                : ''}
-            </h2>
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-3xl font-bold">
+                Brrrata/Cheese Price
+              </h2>
+              <span className="text-3xl font-bold">
+                {performanceData
+                  ? (
+                      1 / performanceData[performanceData.length - 1].Based
+                    ).toFixed(3)
+                  : ''}
+              </span>
+            </div>
             <PriceChart performanceData={performanceData} />
           </div>
           {/* Smaller Tabs Component */}

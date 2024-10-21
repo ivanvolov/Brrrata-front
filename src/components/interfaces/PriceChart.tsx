@@ -26,7 +26,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
         <p style={{ color: '#fff', marginBottom: '5px' }}>{`${label}`}</p>
         {payload.map((entry: any, index: any) => (
           <p key={index} style={{ color: entry.color, margin: '2px 0' }}>
-            {`${entry.name}: ${entry.value}%`}
+            {`${entry.name}: ${entry.value.toFixed(3)}`}
           </p>
         ))}
       </div>
@@ -71,14 +71,14 @@ const PriceChart: React.FC<PriceChartProps> = ({ performanceData }) => {
             stroke="#888"
             fontSize="12px"
             fontWeight="bold"
-            tickMargin={10}
+            tickMargin={1}
           />
           <YAxis
             stroke="#888"
             fontSize="12px"
             fontWeight="bold"
-            domain={[-5, 40]}
-            ticks={[0, 10, 20, 30, 40]}
+            domain={['auto', 'auto']}
+            tickFormatter={(value) => value.toFixed(2)}
           />
           <Tooltip content={<CustomTooltip />} />
           <Area
@@ -87,7 +87,7 @@ const PriceChart: React.FC<PriceChartProps> = ({ performanceData }) => {
             stroke="#82ca9d"
             fillOpacity={1}
             fill="url(#colorStrategy)"
-            name="BASED"
+            name="Brrr"
           />
         </AreaChart>
       </ResponsiveContainer>
