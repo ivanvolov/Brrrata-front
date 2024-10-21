@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from 'react';
 import {
   AreaChart,
   Area,
@@ -8,26 +7,6 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from 'recharts';
-import { useBlockNumber } from 'wagmi';
-import { getPrices } from '../../shared/server';
-
-const defaultPerformanceData = [
-  {
-    date: 'Oct 05',
-    pureETH: 0,
-    Based: 0,
-  },
-  {
-    date: 'Oct 12',
-    pureETH: -3.44,
-    Based: 3.56,
-  },
-  {
-    date: 'Oct 19',
-    pureETH: -3.38,
-    Based: 3.68,
-  },
-];
 
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
@@ -56,39 +35,11 @@ const CustomTooltip = ({ active, payload, label }: any) => {
   return null;
 };
 
-export default function PriceChart() {
-  const [performanceData, setPerformanceData] = useState(
-    defaultPerformanceData,
-  );
-  const { data: blockNumber } = useBlockNumber({ watch: true });
-  useEffect(() => {
-    const getAndUpdateData = async () => {
-      const result = await getPrices();
-      console.log(result);
-      // dateString
-      // price
-      const prices = [
-        {
-          date: 'Oct 16',
-          pureETH: 0,
-          Based: 0,
-        },
-        {
-          date: 'Oct 17',
-          pureETH: 1,
-          Based: 1.1,
-        },
-        {
-          date: 'Oct 18',
-          pureETH: 1,
-          Based: 1.4,
-        },
-      ];
-      setPerformanceData(prices);
-    };
-    getAndUpdateData();
-  }, [blockNumber]);
+interface PriceChartProps {
+  performanceData: any;
+}
 
+const PriceChart: React.FC<PriceChartProps> = ({ performanceData }) => {
   return (
     <div
       style={{
@@ -142,4 +93,6 @@ export default function PriceChart() {
       </ResponsiveContainer>
     </div>
   );
-}
+};
+
+export default PriceChart;

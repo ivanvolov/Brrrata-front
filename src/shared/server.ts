@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const url = 'https://api.brrrata.fun';
-// const url = 'http://localhost:3001';
+// const url = 'http://localhost:3002';
 
 export const sendRevealRequest = async (walletAddress: any): Promise<any> => {
   const data = {

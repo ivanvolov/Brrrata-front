@@ -1,4 +1,4 @@
-import React from 'react';
+import { useEffect, useState } from 'react';
 import Footer from './Footer';
 import Header from './Header';
 import Tabs from './Tabs';
@@ -9,9 +9,42 @@ import gif3 from '../files/ramsay.gif';
 import gif4 from '../files/pizza.gif';
 import { ToastContainer } from 'react-toastify';
 
-import Test from '../actions/Unstake/test.tsx';
+import { useBlockNumber } from 'wagmi';
+import { getPrices } from '../../shared/server';
+
+const defaultPerformanceData = [
+  {
+    date: 'Oct 05',
+    pureETH: 1,
+    Based: 1,
+  },
+  {
+    date: 'Oct 12',
+    pureETH: 1,
+    Based: 1,
+  },
+];
 
 export default function Page() {
+  const [performanceData, setPerformanceData] = useState(
+    defaultPerformanceData,
+  );
+  const { data: blockNumber } = useBlockNumber({ watch: true });
+  useEffect(() => {
+    const getAndUpdateData = async () => {
+      const result = await getPrices();
+      // console.log('Prices:', result.prices);
+
+      setPerformanceData(
+        result.prices.map((obj: any) => ({
+          date: obj.dateString,
+          pureETH: 1,
+          Based: obj.price,
+        })),
+      );
+    };
+    getAndUpdateData();
+  }, [blockNumber]);
   return (
     <div className="min-h-screen bg-gray-100 font-sans">
       <Header />
@@ -20,9 +53,14 @@ export default function Page() {
           {/* Large Chart Component */}
           <div className="w-full md:w-3/4 bg-white p-8 rounded-lg shadow-lg">
             <h2 className="text-3xl font-bold text-start mb-6">
-              Brrrata/Cheese Price
+              Brrrata/Cheese Price{' '}
+              {performanceData
+                ? (
+                    1 / performanceData[performanceData.length - 1].Based
+                  ).toFixed(10)
+                : ''}
             </h2>
-            <PriceChart />
+            <PriceChart performanceData={performanceData} />
           </div>
           {/* Smaller Tabs Component */}
           <div className="w-full md:w-1/3 bg-white p-6 rounded-lg shadow-lg">
