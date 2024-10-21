@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import MoldForm from './MoldForm';
 import Reveal from './Reveal';
 import { useReadContract, useAccount, useBlockNumber } from 'wagmi';
@@ -7,44 +7,25 @@ import { useQueryClient } from '@tanstack/react-query';
 import fonduePitABI from '../../../web3/abi/FonduePit.json';
 import { FONDUEPIT_ADDRESS, ACTIVE_CHAIN_ID } from '../../../web3';
 import { toNumber } from '../../../shared/token';
-import { getRevealState } from '../../../shared/server';
-import { BigNumber } from '@ethersproject/bignumber';
-import { toBN } from '../../../shared/token';
 
-export default function Unstake() {
+interface UnstakeProps {
+  setRevealExist: any;
+  revealExist: any;
+  canReveal: any;
+  amount: any;
+  spin: any;
+}
+
+const Unstake: React.FC<UnstakeProps> = ({
+  setRevealExist,
+  revealExist,
+  canReveal,
+  amount,
+  spin,
+}) => {
   const queryClient = useQueryClient();
   const { data: blockNumber } = useBlockNumber({ watch: true });
   const { address: walletAddress, chainId: chainId } = useAccount();
-
-  const [revealExist, setRevealExist] = useState(-1);
-
-  const [canReveal, setCanReveal] = useState(false);
-  const [amount, setAmount] = useState(BigNumber.from(0));
-  const [spin, setSpin] = useState(0);
-
-  useEffect(() => {
-    if (blockNumber === undefined) return;
-    const update = async () => {
-      const result = await getRevealState(walletAddress);
-
-      if (result.reveal) {
-        setRevealExist(1);
-        setCanReveal(result.reveal.canReveal);
-        setAmount(toBN(String(result.reveal.amount)));
-        setSpin(result.reveal.spin);
-      } else {
-        setRevealExist(0);
-        setCanReveal(false);
-      }
-
-      // // Notice: for rullet testing
-      // setRevealExist(1);
-      // setCanReveal(true);
-      // setAmount(toBN(45, 18));
-      // setSpin(5); //Burnt Cheese
-    };
-    update();
-  }, [blockNumber, walletAddress]);
 
   const { data: lastFormId, queryKey: queryKeyLF } = useReadContract({
     abi: fonduePitABI,
@@ -84,4 +65,6 @@ export default function Unstake() {
   } else {
     return <div>You don't have any brrrata staked</div>;
   }
-}
+};
+
+export default Unstake;

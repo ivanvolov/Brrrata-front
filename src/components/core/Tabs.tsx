@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 
 import { useState } from 'react';
-import { useAccount } from 'wagmi';
+import { useAccount, useBlockNumber } from 'wagmi';
 
 import Mint from '../actions/Mint';
 import Burn from '../actions/Burn';
@@ -10,10 +10,17 @@ import Unstake from '../actions/Unstake/Unstake';
 
 import { ACTIVE_CHAIN_ID } from '../../web3';
 
+import { getRevealState } from '../../shared/server';
+import { BigNumber } from '@ethersproject/bignumber';
+import { toBN } from '../../shared/token';
+
 export default function Tabs() {
   const [activeTab, setActiveTab] = useState('mint');
 
   const { address: walletAddress, chainId: chainId } = useAccount();
+  const { data: blockNumber } = useBlockNumber({ watch: true });
+
+  // ---- Mint Inforcment if wallet problems
 
   useEffect(() => {
     if (!walletAddress || chainId != ACTIVE_CHAIN_ID) {
@@ -24,15 +31,55 @@ export default function Tabs() {
   const _setActiveTab = (tab: string) => {
     if (!walletAddress || chainId != ACTIVE_CHAIN_ID) {
       if (tab === 'mint') setActiveTab(tab);
+    } else if (revealExist == 1 && canReveal == true) {
+      if (tab === 'unstake') setActiveTab(tab);
     } else setActiveTab(tab);
   };
+
+  // ---- reveal inforcment if can reveal
+
+  const [revealExist, setRevealExist] = useState(-1);
+
+  const [canReveal, setCanReveal] = useState(false);
+  const [amount, setAmount] = useState(BigNumber.from(0));
+  const [spin, setSpin] = useState(0);
+
+  useEffect(() => {
+    if (blockNumber === undefined) return;
+    const update = async () => {
+      const result = await getRevealState(walletAddress);
+
+      if (result.reveal) {
+        setRevealExist(1);
+        setCanReveal(result.reveal.canReveal);
+        setAmount(toBN(String(result.reveal.amount)));
+        setSpin(result.reveal.spin - 1);
+      } else {
+        setRevealExist(0);
+        setCanReveal(false);
+      }
+
+      // // Notice: for rullet testing
+      // setRevealExist(1);
+      // setCanReveal(true);
+      // setAmount(toBN(45, 18));
+      // setSpin(5); //Burnt Cheese
+    };
+    setRevealExist(-1);
+    update();
+  }, [blockNumber, walletAddress]);
+
+  // console.log('revealExist: %s, canReveal: %s', revealExist, canReveal);
+  if (revealExist == 1 && activeTab != 'unstake') {
+    setActiveTab('unstake');
+  }
 
   const renderContent = () => {
     switch (activeTab) {
       case 'mint':
         return (
           <div className="p-6">
-            <Mint revealTabTransfer={() => _setActiveTab('unstake')} />
+            <Mint />
           </div>
         );
       case 'burn':
@@ -50,7 +97,13 @@ export default function Tabs() {
       case 'unstake':
         return (
           <div className="overflow-y-auto p-6">
-            <Unstake />
+            <Unstake
+              setRevealExist={setRevealExist}
+              revealExist={revealExist}
+              canReveal={canReveal}
+              spin={spin}
+              amount={amount}
+            />
           </div>
         );
       default:

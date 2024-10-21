@@ -13,17 +13,14 @@ import { BRRRATA_ADDRESS } from '../../web3';
 
 import { toBN, format, trueParse, formatShort } from '../../shared/token';
 import { amountStringInputRestriction } from '../../shared/inputRestrictions';
-import { getRevealState } from '../../shared/server';
 import { getMintButtonLogic } from '../actions/mintButtonLogic';
 
 import { BigNumber } from '@ethersproject/bignumber';
 import { toast } from 'react-toastify';
 
-interface MintProps {
-  revealTabTransfer: any;
-}
+interface MintProps {}
 
-const Mint: React.FC<MintProps> = ({ revealTabTransfer }) => {
+const Mint: React.FC<MintProps> = ({}) => {
   const queryClient = useQueryClient();
 
   const { data: blockNumber } = useBlockNumber({ watch: true });
@@ -87,17 +84,6 @@ const Mint: React.FC<MintProps> = ({ revealTabTransfer }) => {
 
   // ---- Just react stuff
 
-  const [revealExist, setRevealExist] = useState(false);
-  useEffect(() => {
-    if (blockNumber === undefined) return;
-    const update = async () => {
-      const result = await getRevealState(walletAddress);
-      if (result.reveal) setRevealExist(true);
-      else setRevealExist(false);
-    };
-    update();
-  }, [blockNumber, walletAddress]);
-
   const [amountPercent, setAmountPercent] = useState(0);
   const [amount, setAmount] = useState(BigNumber.from(0));
   const [amountString, setAmountString] = useState('');
@@ -141,8 +127,6 @@ const Mint: React.FC<MintProps> = ({ revealTabTransfer }) => {
       handleTransactionMint: handleTransactionMint,
       openConnectModal: openConnectModal,
       openChainModal: openChainModal,
-      revealExist: revealExist,
-      revealTabTransfer: revealTabTransfer,
     });
   return (
     <>

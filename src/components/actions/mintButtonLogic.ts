@@ -11,8 +11,6 @@ export const getMintButtonLogic = (options: any) => {
     handleTransactionMint,
     openConnectModal,
     openChainModal,
-    revealExist,
-    revealTabTransfer,
   } = options;
   const emptyHandle = () => {};
   let handleClick;
@@ -34,10 +32,6 @@ export const getMintButtonLogic = (options: any) => {
     disabled = true;
     handleClick = emptyHandle;
     buttonText = 'Loading...';
-  } else if (revealExist) {
-    disabled = true;
-    handleClick = revealTabTransfer;
-    buttonText = 'Reveal first';
   } else if (amount.isZero()) {
     disabled = false;
     handleClick = emptyHandle;

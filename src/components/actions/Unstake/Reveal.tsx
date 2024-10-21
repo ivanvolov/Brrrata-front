@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useAccount } from 'wagmi';
 
 import { LuckyWheel } from './LuckyWheel';
@@ -39,7 +39,7 @@ const Reveal: React.FC<RevealProps> = ({
           onClick={() => setShowModal(true)}
           disabled={!canReveal}
         >
-          {canReveal ? 'Reveal' : 'Wait for oracle randomness'}
+          {canReveal ? 'Reveal' : 'Wait to reveal'}
         </button>
       </div>
       <LuckyWheel
