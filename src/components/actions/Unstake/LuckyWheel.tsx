@@ -9,7 +9,7 @@ import { prizeList } from './prizes';
 interface ModalProps {
   showModal: boolean;
   setShowModal: (value: boolean) => void;
-  setRevealExist: (value: boolean) => void;
+  setRevealExist: any;
   walletAddress: any;
   spin: number;
 }
@@ -76,16 +76,16 @@ export const LuckyWheel: React.FC<ModalProps> = ({
                 />
               ) : (
                 <>
-                <div className="flex flex-col justify-center items-center">
-                  <img
-                    src={prizeList[prizeIndex].image}
-                    alt="Cheese Printer from Hell"
-                    className="w-full h-full"
-                  />
-                  <p className="mt-4 text-xl font-semibold">
-                    {prizeList[prizeIndex].text}
-                  </p>
-                </div>
+                  <div className="flex flex-col justify-center items-center">
+                    <img
+                      src={prizeList[prizeIndex].image}
+                      alt="Cheese Printer from Hell"
+                      className="w-full h-full"
+                    />
+                    <p className="mt-4 text-xl font-semibold">
+                      {prizeList[prizeIndex].text}
+                    </p>
+                  </div>
                 </>
               )}
             </div>

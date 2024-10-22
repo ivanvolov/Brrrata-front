@@ -54,7 +54,7 @@ export default function Tabs() {
         setCanReveal(result.reveal.canReveal);
         setAmount(toBN(String(result.reveal.amount)));
         setSpin(result.reveal.spin - 1);
-      } else {
+      } else if (revealExist != 1) {
         setRevealExist(0);
         setCanReveal(false);
       }
@@ -65,7 +65,6 @@ export default function Tabs() {
       // setAmount(toBN(45, 18));
       // setSpin(5); //Burnt Cheese
     };
-    setRevealExist(-1);
     update();
   }, [blockNumber, walletAddress]);
 
@@ -79,7 +78,7 @@ export default function Tabs() {
       case 'mint':
         return (
           <div className="p-6">
-            <Mint />
+            <Mint setRevealExist={setRevealExist} />
           </div>
         );
       case 'burn':

@@ -18,9 +18,11 @@ import { getMintButtonLogic } from '../actions/mintButtonLogic';
 import { BigNumber } from '@ethersproject/bignumber';
 import { toast } from 'react-toastify';
 
-interface MintProps {}
+interface MintProps {
+  setRevealExist: any;
+}
 
-const Mint: React.FC<MintProps> = ({}) => {
+const Mint: React.FC<MintProps> = ({ setRevealExist }) => {
   const queryClient = useQueryClient();
 
   const { data: blockNumber } = useBlockNumber({ watch: true });
@@ -60,8 +62,10 @@ const Mint: React.FC<MintProps> = ({}) => {
     if (!isPending && notificationId !== -1) {
       toast.dismiss(notificationId);
       setNotificationId(-1);
-      if (isSuccess) toast.success('Tx Successful!');
-      else toast.warning('Tx rejected!');
+      if (isSuccess) {
+        toast.success('Tx Successful!');
+        setRevealExist(1);
+      } else toast.warning('Tx rejected!');
     }
     console.log('>> isPending:', isPending);
     console.log('>> isSuccess:', isSuccess);
