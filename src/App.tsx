@@ -4,7 +4,6 @@ import { RainbowKitProvider } from '@rainbow-me/rainbowkit';
 import { WagmiProvider } from 'wagmi';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import Page from './components/core/Page';
-import CheeseClickEffect from './components/actions/CheeseClickEffect';
 import 'react-toastify/dist/ReactToastify.css';
 
 import { config } from './web3/wagmiConfig';
