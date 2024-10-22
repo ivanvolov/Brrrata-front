@@ -85,17 +85,17 @@ const MoldForm: React.FC<MoldFormProps> = ({ id }) => {
   if (isLoadingInterest || isLoadingFD || !blockData) return <></>;
 
   const amount = toBN(formData[0]);
-  const PnL = toBN(interest).div(amount).mul(toBN(100, 18));
-  console.log('> amount', amount.toString());
-  console.log('> interest', toBN(interest).toString());
-  console.log('> PnL', PnL.toString());
+  const PnL = toBN(interest, 18).div(amount).mul(100);
+  // console.log('> Mold Form State:');
+  // console.log('>> amount', amount.toString());
+  // console.log('>> interest', toBN(interest).toString());
+  // console.log('>> PnL', PnL);
 
   const periodId = toNumber(formData[1]);
 
   // ---- Time stuff
 
   const now = moment();
-  const start = moment(toNumber(formData[2]) * 1000);
   const end = moment(
     (toNumber(formData[2]) + periodMapping[periodId].period) * 1000,
   );
@@ -115,7 +115,7 @@ const MoldForm: React.FC<MoldFormProps> = ({ id }) => {
           <div>
             <span className="text-gray-600">Interest:</span>
             <span className="ml-1 font-medium text-green-600">
-              {format(PnL)} %
+              {Number(format(PnL)).toFixed(4)} %
             </span>
           </div>
           <div>
