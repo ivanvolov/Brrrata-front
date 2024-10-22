@@ -34,6 +34,10 @@ const Unstake: React.FC<UnstakeProps> = ({
     args: [walletAddress],
   });
 
+  // console.log('> Unstake state:');
+  // console.log('revealExist %s', revealExist);
+  // console.log('canReveal %s', canReveal);
+
   useEffect(() => {
     if (blockNumber === undefined) return;
     queryClient.invalidateQueries({ queryKey: queryKeyLF });
