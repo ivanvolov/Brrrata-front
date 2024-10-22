@@ -7,10 +7,10 @@ import gif1 from '../files/printer.gif';
 import gif2 from '../files/double_cheese.gif';
 import gif3 from '../files/ramsay.gif';
 import gif4 from '../files/pizza.gif';
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
+
 import { useBlockNumber } from 'wagmi';
 import { getPrices } from '../../shared/server';
-import 'react-toastify/dist/ReactToastify.css';
 
 const defaultPerformanceData = [
   {
@@ -30,8 +30,6 @@ export default function Page() {
     defaultPerformanceData,
   );
   const { data: blockNumber } = useBlockNumber({ watch: true });
-  const tokenAddress = "0xCF8390A74c59e008df3f6154bECf798402301698";
-
   useEffect(() => {
     const getAndUpdateData = async () => {
       const result = await getPrices();
@@ -47,20 +45,6 @@ export default function Page() {
     };
     getAndUpdateData();
   }, [blockNumber]);
-
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(tokenAddress);
-    toast.success('Token address copied to clipboard!', {
-      position: "top-center",
-      autoClose: 1000,
-      hideProgressBar: true,
-      closeOnClick: true,
-      pauseOnHover: false,
-      draggable: false,
-      progress: undefined,
-    });
-  };
-
   return (
     <div className="min-h-screen bg-gray-100 font-sans">
       <Header />
@@ -80,25 +64,11 @@ export default function Page() {
             </div>
             <PriceChart performanceData={performanceData} />
           </div>
-          {/* Token Address and Tabs Components */}
+          {/* Smaller Tabs Component */}
           <div className="w-full md:w-1/3 bg-white p-6 rounded-lg shadow-lg">
-            <div>
-              {/* Token Address Component */}
-              <div className="bg-gray-200 p-4 rounded-lg mb-4 flex items-center justify-between">
-                <span className="text-md font-semibold">Token: {tokenAddress.slice(0, 5)}...{tokenAddress.slice(-3)}</span>
-                <button
-                  onClick={copyToClipboard}
-                  className="ml-2 bg-blue-500 text-white px-4 py-1 rounded-lg hover:bg-blue-600 transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50"
-                >
-                  Copy
-                </button>
-              </div>
-              {/* Tabs Component */}
-              <div className="mt-4">
-                <Tabs />
-              </div>
-            </div>
+            <Tabs />
           </div>
+          
         </div>
       </section>
       <section className="w-full max-w-6xl mx-auto my-4 pb-16">
@@ -128,9 +98,12 @@ export default function Page() {
                   is printed. Think of it like the flowers—they bloom, they get
                   expensive. Early minting = cheap cheese.
                 </li>
+                <li>
+                  <strong>Token Address:</strong> 0xCF8390A74c59e008df3f6154bECf798402301698
+                </li>
               </ul>
             </li>
-            <div className="relative w-1/2 pb-[50%] mx-auto flex items-center justify-center">
+            <div className="relative w-1/2 pb-[50%] mt-3 mx-auto flex items-center justify-center">
               <img
                 src={gif1}
                 alt="Cheese Printer from Hell"
