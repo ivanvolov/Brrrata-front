@@ -77,25 +77,25 @@ export default function Tabs() {
     switch (activeTab) {
       case 'mint':
         return (
-          <div className="p-6">
+          <div className="p-4">
             <Mint setRevealExist={setRevealExist} />
           </div>
         );
       case 'burn':
         return (
-          <div className="p-6">
+          <div className="p-4">
             <Burn />
           </div>
         );
       case 'stake':
         return (
-          <div className="p-6">
+          <div className="p-4">
             <Stake />
           </div>
         );
       case 'unstake':
         return (
-          <div className="overflow-y-auto p-6">
+          <div className="overflow-y-auto p-4">
             <Unstake
               setRevealExist={setRevealExist}
               revealExist={revealExist}
