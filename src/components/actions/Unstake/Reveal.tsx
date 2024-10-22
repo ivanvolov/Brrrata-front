@@ -28,10 +28,14 @@ const Reveal: React.FC<RevealProps> = ({
       <div className="rounded-lg border p-4 transition-colors hover:bg-gray-50">
         <div className="mb-3 grid grid-cols-1 gap-4 text-sm">
           <div>
-            <span className="text-gray-600">Amount:</span>
-            <span className="ml-1 font-medium">
-              {formatShort(amount)} BRRATA
-            </span>
+            {amount && amount != 0 ? (
+              <>
+                <span className="text-gray-600">Amount:</span>
+                <span className="ml-1 font-medium">
+                  {formatShort(amount)} BRRATA
+                </span>
+              </>
+            ) : null}
           </div>
         </div>
         <button
