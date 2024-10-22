@@ -113,27 +113,27 @@ export default function Page() {
               </p>
               <ul className="list-disc list-inside mt-2">
                 <li>
-                  <strong>Normal cheese:</strong> Yeah, it's just cheese—no
+                  <strong>Normal cheese (45%):</strong> Yeah, it's just cheese—no
                   frills, no thrills.
                 </li>
                 <li>
-                  <strong>Double your cheese:</strong> Twice the dairy, twice
+                  <strong>Double your cheese (15%):</strong> Twice the dairy, twice
                   the flex!
                 </li>
                 <li>
-                  <strong>Normal cheese locked for 1 day:</strong> Sit tight,
+                  <strong>Normal cheese locked for 1 day (15%):</strong> Sit tight,
                   cheese takes time, buddy.
                 </li>
                 <li>
-                  <strong>Normal cheese locked for 1 week:</strong> Aged to
+                  <strong>Normal cheese locked for 1 week (10%):</strong> Aged to
                   perfection—hope you like waiting!
                 </li>
                 <li>
-                  <strong>Moldy cheese:</strong> Yikes, lose 10% of your
+                  <strong>Moldy cheese (7%):</strong> Yikes, lose 10% of your
                   cheese—better luck next time.
                 </li>
                 <li>
-                  <strong>Burnt cheese:</strong> Gordon Ramsay just showed up,
+                  <strong>Burnt cheese (3%):</strong> Gordon Ramsay just showed up,
                   called you an idiot sandwich, and poof—your cheese is GONE!
                 </li>
               </ul>
