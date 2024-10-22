@@ -57,7 +57,7 @@ export default function Page() {
               <span className="text-3xl font-bold">
                 {performanceData
                   ? (
-                      1 / performanceData[performanceData.length - 1].Based
+                      performanceData[performanceData.length - 1].Based
                     ).toFixed(3)
                   : ''}
               </span>
