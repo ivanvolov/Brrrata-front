@@ -30,7 +30,7 @@ export default function Page() {
     defaultPerformanceData,
   );
   const { data: blockNumber } = useBlockNumber({ watch: true });
-  const tokenAddress = "0x1234567890abcdef1234567890abcdef12345678";
+  const tokenAddress = "0xCF8390A74c59e008df3f6154bECf798402301698";
 
   useEffect(() => {
     const getAndUpdateData = async () => {
@@ -85,10 +85,10 @@ export default function Page() {
             <div>
               {/* Token Address Component */}
               <div className="bg-gray-200 p-4 rounded-lg mb-4 flex items-center justify-between">
-                <span className="text-lg font-semibold">Token: {tokenAddress.slice(0, 5)}...{tokenAddress.slice(-3)}</span>
+                <span className="text-md font-semibold">Token: {tokenAddress.slice(0, 5)}...{tokenAddress.slice(-3)}</span>
                 <button
                   onClick={copyToClipboard}
-                  className="ml-2 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50"
+                  className="ml-2 bg-blue-500 text-white px-4 py-1 rounded-lg hover:bg-blue-600 transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50"
                 >
                   Copy
                 </button>
