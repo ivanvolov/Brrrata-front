@@ -55,9 +55,9 @@ const Unstake: React.FC<UnstakeProps> = ({
       <>
         {Array.from({ length: toNumber(lastFormId as any) }, (_, i) => i)
           .reverse()
-          .map((id) => (
-            <div>
-              <MoldForm key={id} id={id} />
+          .map((id, index) => (
+            <div key={`${id}-${index}`}>
+              <MoldForm id={id} />
             </div>
           ))}
       </>

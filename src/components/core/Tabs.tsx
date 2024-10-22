@@ -31,7 +31,7 @@ export default function Tabs() {
   const _setActiveTab = (tab: string) => {
     if (!walletAddress || chainId != ACTIVE_CHAIN_ID) {
       if (tab === 'mint') setActiveTab(tab);
-    } else if (revealExist == 1 && canReveal == true) {
+    } else if (revealExist == 1) {
       if (tab === 'unstake') setActiveTab(tab);
     } else setActiveTab(tab);
   };

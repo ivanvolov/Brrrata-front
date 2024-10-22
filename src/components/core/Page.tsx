@@ -33,7 +33,7 @@ export default function Page() {
   useEffect(() => {
     const getAndUpdateData = async () => {
       const result = await getPrices();
-      // console.log('Prices:', result.prices);
+      console.log('Prices:', result.prices);
 
       setPerformanceData(
         result.prices.map((obj: any) => ({
@@ -53,9 +53,7 @@ export default function Page() {
           {/* Large Chart Component */}
           <div className="w-full md:w-3/4 bg-white p-8 rounded-lg shadow-lg">
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-3xl font-bold">
-                Brrrata/Cheese Price
-              </h2>
+              <h2 className="text-3xl font-bold">Brrrata/Cheese Price</h2>
               <span className="text-3xl font-bold">
                 {performanceData
                   ? (

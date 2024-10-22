@@ -88,6 +88,7 @@ const MoldForm: React.FC<MoldFormProps> = ({ id }) => {
   const PnL = toBN(interest).div(amount).mul(toBN(100, 18));
   console.log('> amount', amount.toString());
   console.log('> interest', toBN(interest).toString());
+  console.log('> PnL', PnL.toString());
 
   const periodId = toNumber(formData[1]);
 
@@ -100,7 +101,6 @@ const MoldForm: React.FC<MoldFormProps> = ({ id }) => {
   );
 
   const endDiff = end.isAfter(now) ? end.fromNow() : 'Expired';
-  const startDiff = start.fromNow();
 
   return (
     <div className="max-w-xs rounded-xl bg-white p-1 shadow-1xl">
