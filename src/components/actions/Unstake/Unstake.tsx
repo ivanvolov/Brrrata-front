@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import MoldForm from './MoldForm';
+import FormWrapper from './FormWrapper';
 import Reveal from './Reveal';
 import { useReadContract, useAccount, useBlockNumber } from 'wagmi';
 
@@ -61,7 +61,7 @@ const Unstake: React.FC<UnstakeProps> = ({
           .reverse()
           .map((id, index) => (
             <div key={`${id}-${index}`}>
-              <MoldForm id={id} />
+              <FormWrapper id={id} />
             </div>
           ))}
       </>

@@ -33,7 +33,7 @@ export default function Page() {
   useEffect(() => {
     const getAndUpdateData = async () => {
       const result = await getPrices();
-      console.log('Prices:', result.prices);
+      // console.log('Prices:', result.prices);
 
       setPerformanceData(
         result.prices.map((obj: any) => ({
@@ -56,9 +56,7 @@ export default function Page() {
               <h2 className="text-3xl font-bold">Brrrata/Cheese Price</h2>
               <span className="text-3xl font-bold">
                 {performanceData
-                  ? (
-                      performanceData[performanceData.length - 1].Based
-                    ).toFixed(3)
+                  ? performanceData[performanceData.length - 1].Based.toFixed(3)
                   : ''}
               </span>
             </div>
@@ -68,7 +66,6 @@ export default function Page() {
           <div className="w-full md:w-1/3 bg-white p-6 rounded-lg shadow-lg">
             <Tabs />
           </div>
-          
         </div>
       </section>
       <section className="w-full max-w-6xl mx-auto my-4 pb-16">
@@ -99,7 +96,8 @@ export default function Page() {
                   expensive. Early minting = cheap cheese.
                 </li>
                 <li>
-                  <strong>Token Address:</strong> 0xCF8390A74c59e008df3f6154bECf798402301698
+                  <strong>Token Address:</strong>{' '}
+                  0xCF8390A74c59e008df3f6154bECf798402301698
                 </li>
               </ul>
             </li>

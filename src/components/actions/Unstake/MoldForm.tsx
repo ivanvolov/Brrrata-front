@@ -74,22 +74,22 @@ const MoldForm: React.FC<MoldFormProps> = ({ id }) => {
 
   // ---- Notifications END
 
-  const unlock = (formId: any) => {
+  const unlock = () => {
     writeContract({
       abi: fonduePitABI,
       address: FONDUEPIT_ADDRESS,
       functionName: 'unlock',
-      args: [formId],
+      args: [id],
     });
   };
   if (isLoadingInterest || isLoadingFD || !blockData) return <></>;
 
+  // console.log('> Mold Form State:', id);
+  // console.log('>> (1)', formData[0]);
+  // console.log('>> (2)', formData[1]);
+  // console.log('>> (3)', formData[2]);
   const amount = toBN(formData[0]);
   const PnL = toBN(interest, 18).div(amount).mul(100);
-  // console.log('> Mold Form State:');
-  // console.log('>> amount', amount.toString());
-  // console.log('>> interest', toBN(interest).toString());
-  // console.log('>> PnL', PnL);
 
   const periodId = toNumber(formData[1]);
 
@@ -126,7 +126,7 @@ const MoldForm: React.FC<MoldFormProps> = ({ id }) => {
         {!end.isAfter(now) ? (
           <button
             className="w-full rounded-lg bg-purple-500 py-2 font-medium text-white transition-colors hover:bg-purple-600"
-            onClick={() => unlock(id)}
+            onClick={() => unlock()}
           >
             Unstake
           </button>
